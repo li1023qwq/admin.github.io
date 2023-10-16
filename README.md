@@ -1,12 +1,22 @@
-## uni-admin
+# uniCloud-admin
 
-uni-admin，是基于 uni-app 和 uniCloud 的管理后台项目模版。
+> 基于 uni-app，uniCloud 的 admin 管理项目模板。[文档](https://uniapp.dcloud.io/uniCloud/admin)  
+> 配套前端 [天天商城--前后端开源](https://ext.dcloud.net.cn/plugin?id=4763)
 
-对于uniCloud的开发者而言，其后台管理系统应该使用本框架。
+### 需要安装扩展
+* 自定义页面排序：npm install vuedraggable
+* 文件导出：npm install file-saver
+* Excel导入处理：npm install xlsx
 
-我们搭建了[uni-admin演示站点](http://hellouniadmin.dcloud.net.cn/admin/)，你登录后即可快速体验uni-admin。
+#### 后台体验
+http://tian.cqsort.com/admin/  
+账号：test  
+密码：123456  
 
-uni-admin 是开源的，遵循 MIT 协议，你可以从[Github](https://github.com/dcloudio/uni-admin)或[码云](https://gitee.com/dcloud/uni-admin)获取源码，也可以从[DCloud插件市场](https://ext.dcloud.net.cn/plugin?id=3268)快捷下载。
+#### 客户案例
+![这有米小程序](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-3fbab731-e993-47e6-882f-a74e444709a3/f6ce02f9-de81-4c78-b5b1-e30e1ef6f3dc.png?x-oss-process=image/resize,m_fill,w_200,h_200)
+![惠民](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-3fbab731-e993-47e6-882f-a74e444709a3/b782fca8-ebaa-4082-8d83-69b599e3f495.png?x-oss-process=image/resize,m_fill,w_200,h_200)
+![大牛家政](https://7463-tcb-mkgeroyc82b684-1d3xg5a2a923f-1304205492.tcb.qcloud.la/image/23.png?imageMogr2/crop/200x200/gravity/center)
 
 ## 框架特征
 - 基于 uni-app 的宽屏适配，可自动适配 PC 宽屏和手机各端。了解[宽屏适配](https://uniapp.dcloud.io/adapt)

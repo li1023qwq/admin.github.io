@@ -1,0 +1,91 @@
+{
+	"id": "uni-publish-page-admin",
+	"displayName": "uni-publish-page-admin",
+	"version": "0.0.1",
+	"description": "uni-publish-page-admin",
+	"keywords": [
+        "发布",
+        "publish",
+        "uni-publish-page-admin"
+    ],
+	"repository": "https://gitee.com/dcloud/uni-publish-page",
+	"engines": {
+		"HBuilderX": "^3.1.0"
+	},
+	"dcloudext": {
+		"category": [
+			"uniCloud",
+			"Admin插件"
+		],
+		"sale": {
+			"regular": {
+				"price": "0.00"
+			},
+			"sourcecode": {
+				"price": "0.00"
+			}
+		},
+		"contact": {
+			"qq": ""
+		},
+		"declaration": {
+			"ads": "无",
+			"data": "插件不采集任何数据",
+			"permissions": "无"
+		},
+		"npmurl": ""
+	},
+	"uni_modules": {
+		"dependencies": [
+			"uni-card",
+			"uni-dateformat",
+			"uni-easyinput",
+			"uni-file-picker",
+			"uni-forms",
+			"uni-icons",
+			"uni-pagination",
+			"uni-table"
+		],
+		"encrypt": [],
+		"platforms": {
+			"cloud": {
+				"tcb": "y",
+				"aliyun": "y"
+			},
+			"client": {
+				"Vue": {
+					"vue2": "y",
+					"vue3": "u"
+				},
+				"App": {
+					"app-vue": "u",
+					"app-nvue": "u"
+				},
+				"H5-mobile": {
+					"Safari": "u",
+					"Android Browser": "u",
+					"微信浏览器(Android)": "u",
+					"QQ浏览器(Android)": "u"
+				},
+				"H5-pc": {
+					"Chrome": "u",
+					"IE": "u",
+					"Edge": "u",
+					"Firefox": "u",
+					"Safari": "u"
+				},
+				"小程序": {
+					"微信": "u",
+					"阿里": "u",
+					"百度": "u",
+					"字节跳动": "u",
+					"QQ": "u"
+				},
+				"快应用": {
+					"华为": "u",
+					"联盟": "u"
+				}
+			}
+		}
+	}
+}

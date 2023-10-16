@@ -19,7 +19,8 @@
 			"plugin": "浏览更多 Admin 插件",
 			"changeLanguage": "切换语言",
 			"changePwd": "修改密码",
-			"signOut": "退出"
+			"signOut": "退出",
+			"changeShop": "切换店铺"
 		}
 	},
 	"index": {
@@ -55,10 +56,7 @@
 			"exportExcel": "导出 Excel",
 			"submit": "提交",
 			"back": "返回",
-			"tagManager": "标签管理",
-			"publish": "发布页管理",
-			"version": "版本管理",
-			"sendSMS": "群发短信"
+			"tagManager": "标签管理"
 		},
 		"empty": "没有更多数据",
 		"piecePerPage": "条/页"
@@ -86,13 +84,12 @@
 	},
 	"menu": {
 		"text": {
-			"menuManager": "菜单列表",
+			"menuManager": "菜单管理",
 			"additiveMenu": "待添加菜单"
 		},
 		"button": {
-			"addFirstLevelMenu": "新增一级菜单",
-			"addChildMenu": "子菜单",
-			"updateBuiltInMenu": "更新内置菜单"
+			"addFirstLevelMenu": "新增一级增",
+			"addChildMenu": "子菜单"
 		}
 	},
 	"demo": {

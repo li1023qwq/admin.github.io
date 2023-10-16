@@ -1,17 +1,19 @@
 <template>
 	<view>
-		<block v-for="(fileTask, index) in uploadTasks" :key="index">
+		<template v-for="fileTask in uploadTasks">
 			<view class="upload-task-body">
 				<view class="upload-task-item">
 					<text class="upload-task-item-name">{{fileTask.name}}</text>
-					<progress v-if="showProgress" class="upload-task-item-progress" :activeColor="fileTask.state !== -1 ? '#42b983' : '#ff5a5f'" :percent="fileTask.progress * 100" active :duration="5" />
+					<progress v-if="showProgress" class="upload-task-item-progress"
+						:activeColor="fileTask.state !== -1 ? '#42b983' : '#ff5a5f'" :percent="fileTask.progress * 100"
+						active :duration="5" />
 					<view class="flex" style="justify-content: space-between;">
 						<text class="upload-task-item-size">{{fileTask.size}}</text>
 						<text class="upload-task-item-size">{{fileTask.state !== -1 ? '' : '失败'}}</text>
 					</view>
 				</view>
 			</view>
-		</block>
+		</template>
 	</view>
 </template>
 
@@ -20,9 +22,7 @@
 		props: {
 			uploadTasks: {
 				type: Array,
-				default: function() {
-					return []
-				}
+				default: []
 			},
 			showProgress: {
 				type: Boolean,

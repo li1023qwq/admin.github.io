@@ -3,12 +3,9 @@
 		<view class="uni-header">
 			<uni-stat-breadcrumb class="uni-stat-breadcrumb-on-phone" />
 			<view class="uni-group">
-				<input class="uni-search" type="text" v-model="query" @confirm="search"
-					:placeholder="$t('common.placeholder.query')" />
-				<button class="uni-button hide-on-phone" type="default" size="mini"
-					@click="search">{{$t('common.button.search')}}</button>
-				<button class="uni-button" type="primary" size="mini"
-					@click="navigateTo('./add')">{{$t('common.button.add')}}</button>
+				<input class="uni-search" type="text" v-model="query" @confirm="search" :placeholder="$t('common.placeholder.query')" />
+				<button class="uni-button hide-on-phone" type="default" size="mini" @click="search">{{$t('common.button.search')}}</button>
+				<button class="uni-button" type="primary" size="mini" @click="navigateTo('./add')">{{$t('common.button.add')}}</button>
 				<button class="uni-button" type="warn" size="mini" :disabled="!selectedIndexs.length"
 					@click="delTable">{{$t('common.button.batchDelete')}}</button>
 				<!-- #ifdef H5 -->
@@ -26,26 +23,24 @@
 				:where="where" page-data="replace" :orderby="orderby" :getcount="true" :page-size="options.pageSize"
 				:page-current="options.pageCurrent" v-slot:default="{data,pagination,loading,error,options}"
 				:options="options" loadtime="manual" @load="onqueryload">
-				<uni-table ref="table" :loading="loading || addAppidLoading"
-					:emptyText="error.message || $t('common.empty')" border stripe type="selection"
-					@selection-change="selectionChange" class="table-pc">
+				<uni-table ref="table" :loading="loading || addAppidLoading" :emptyText="error.message || $t('common.empty')"
+					border stripe type="selection" @selection-change="selectionChange" class="table-pc">
 					<uni-tr>
 						<uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'appid')"
 							sortable @sort-change="sortChange($event, 'appid')">AppID</uni-th>
 						<uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'name')"
 							sortable @sort-change="sortChange($event, 'name')">应用名称</uni-th>
-						<uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'description')"
-							sortable @sort-change="sortChange($event, 'description')" :width="descriptionThWidth">应用描述
-						</uni-th>
+						<uni-th align="center" width="380" filter-type="search" @filter-change="filterChange($event, 'description')"
+							sortable @sort-change="sortChange($event, 'description')">应用描述</uni-th>
 						<uni-th align="center" filter-type="timestamp"
 							@filter-change="filterChange($event, 'create_date')" sortable
 							@sort-change="sortChange($event, 'create_date')">创建时间</uni-th>
-						<uni-th align="center" :width="buttonThWidth">操作</uni-th>
+						<uni-th align="center">操作</uni-th>
 					</uni-tr>
-					<uni-tr v-for="(item,index) in data" :key="index" :disabled="item.appid === appid">
+					<uni-tr v-for="(item,index) in data" :key="index">
 						<uni-td align="center">{{item.appid}}</uni-td>
 						<uni-td align="center">{{item.name}}</uni-td>
-						<uni-td align="left">{{item.description}}</uni-td>
+						<uni-td align="center">{{item.description}}</uni-td>
 						<uni-td align="center">
 							<uni-dateformat :threshold="[0, 0]" :date="item.create_date"></uni-dateformat>
 						</uni-td>
@@ -54,14 +49,8 @@
 								-
 							</view>
 							<view v-else class="uni-group">
-								<button @click="publish(item._id)" class="uni-button" size="mini"
-									type="primary">{{$t('common.button.publish')}}</button>
-								<button
-									@click="navigateTo('/uni_modules/uni-upgrade-center/pages/version/list?appid='+item.appid, false)"
-									class="uni-button" size="mini"
-									type="primary">{{$t('common.button.version')}}</button>
-								<button @click="navigateTo('./add?id='+item.appid, false)" class="uni-button"
-									size="mini" type="primary">{{$t('common.button.edit')}}</button>
+								<button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini"
+									type="primary">{{$t('common.button.edit	')}}</button>
 								<button @click="confirmDelete(item._id)" class="uni-button" size="mini"
 									type="warn">{{$t('common.button.delete')}}</button>
 							</view>
@@ -70,8 +59,17 @@
 				</uni-table>
 
 				<view class="uni-pagination-box">
-					<uni-pagination show-icon show-page-size :page-size="pagination.size" v-model="pagination.current"
-						:total="pagination.count" @change="onPageChanged" @pageSizeChange="pageSizeChange" />
+					<!-- #ifndef MP -->
+					<picker class="select-picker" mode="selector" :value="pageSizeIndex" :range="pageSizeOption"
+						@change="changeSize">
+						<button type="default" size="mini" :plain="true">
+							<text>{{pageSizeOption[pageSizeIndex]}} {{$t('common.piecePerPage')}}</text>
+							<uni-icons class="select-picker-icon" type="arrowdown" size="12" color="#999"></uni-icons>
+						</button>
+					</picker>
+					<!-- #endif -->
+					<uni-pagination show-icon :page-size="pagination.size" v-model="pagination.current"
+						:total="pagination.count" @change="onPageChanged" />
 				</view>
 			</unicloud-db>
 		</view>
@@ -81,6 +79,7 @@
 		<!-- #endif -->
 	</view>
 </template>
+
 <script>
 	import {
 		enumConverter,
@@ -92,10 +91,10 @@
 
 	const db = uniCloud.database()
 	// 表查询配置
-	const dbOrderBy = 'create_date' // 排序字段
+	const dbOrderBy = '' // 排序字段
 	const dbSearchFields = [] // 模糊搜索字段，支持模糊搜索的字段列表
 	// 分页配置
-	const pageSize = 20
+	const pageSize = 10
 	const pageCurrent = 1
 
 	const orderByMapping = {
@@ -111,6 +110,8 @@
 				orderby: dbOrderBy,
 				orderByFieldName: "",
 				selectedIndexs: [],
+				pageSizeIndex: 0,
+				pageSizeOption: [20, 50, 100, 500],
 				options: {
 					pageSize,
 					pageCurrent,
@@ -132,9 +133,7 @@
 					}
 				},
 				exportExcelData: [],
-				addAppidLoading: true,
-				descriptionThWidth: 380,
-				buttonThWidth: 400
+				addAppidLoading: true
 			}
 		},
 		onLoad() {
@@ -146,20 +145,26 @@
 		computed: {
 			...mapState('app', ['appName', 'appid'])
 		},
+		watch: {
+			pageSizeIndex: {
+				immediate: true,
+				handler(val, old) {
+					this.options.pageSize = this.pageSizeOption[val]
+					this.options.pageCurrent = 1
+					this.$nextTick(() => {
+						this.loadData()
+					})
+				}
+			}
+		},
 		methods: {
-			pageSizeChange(pageSize) {
-				this.options.pageSize = pageSize
-				this.options.pageCurrent = 1
-				this.$nextTick(() => {
-					this.loadData()
-				})
-			},
 			onqueryload(data) {
 				if (!data.find(item => item.appid === this.appid)) {
 					this.addCurrentAppid({
 						appid: this.appid,
 						name: this.appName,
-						description: "admin 管理后台"
+						description: "admin 管理后台",
+						create_date: Date.now()
 					})
 				} else {
 					this.addAppidLoading = false
@@ -176,7 +181,7 @@
 					setTimeout(() => {
 						uni.showModal({
 							content: `检测到数据库中无当前应用, 已自动添加应用: ${this.appName}`,
-							showCancel: false
+							showCancel:false
 						})
 					}, 500)
 				}).catch((err) => {
@@ -228,9 +233,7 @@
 			},
 			// 批量删除
 			delTable() {
-				console.warn(
-					"删除应用，只能删除应用表 opendb-app-list 中的应用数据记录，不能删除与应用关联的其他数据，例如：使用升级中心 uni-upgrade-center 等插件产生的数据（应用版本数据等）"
-				)
+				console.warn("删除应用，只能删除应用表 opendb-app-list 中的应用数据记录，不能删除与应用关联的其他数据，例如：使用升级中心 uni-upgrade-center 等插件产生的数据（应用版本数据等）")
 				this.$refs.udb.remove(this.selectedItems(), {
 					success: (res) => {
 						this.$refs.table.clearSelection()
@@ -242,11 +245,8 @@
 				this.selectedIndexs = e.detail.index
 			},
 			confirmDelete(id) {
-				console.warn(
-					"删除应用，只能删除应用表 opendb-app-list 中的应用数据记录，不能删除与应用关联的其他数据，例如：使用升级中心 uni-upgrade-center 等插件产生的数据（应用版本数据等）"
-				)
+				console.warn("删除应用，只能删除应用表 opendb-app-list 中的应用数据记录，不能删除与应用关联的其他数据，例如：使用升级中心 uni-upgrade-center 等插件产生的数据（应用版本数据等）")
 				this.$refs.udb.remove(id, {
-					confirmContent: '是否删除该应用',
 					success: (res) => {
 						this.$refs.table.clearSelection()
 					}
@@ -277,11 +277,6 @@
 				}
 				this.$nextTick(() => {
 					this.$refs.udb.loadData()
-				})
-			},
-			publish(id) {
-				uni.navigateTo({
-					url: '/pages/system/app/uni-portal/uni-portal?id=' + id
 				})
 			}
 		}

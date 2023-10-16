@@ -40,7 +40,7 @@
 			// 展开菜单的背景色
 			backgroundColor: {
 				type: String,
-				default: '#f5f5f5'
+				default: '#181f23'
 			},
 		},
 		data() {
@@ -122,9 +122,9 @@
 	}
 
 	.uni-sub-menu__title:hover {
-		color: #42B983;
+		color: #fff;
 		outline: none;
-		background-color: #EBEBEB;
+		background-color: $menu-bg-color-hover;
 	}
 
 	.uni-sub-menu__title-sub {

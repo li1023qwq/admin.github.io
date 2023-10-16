@@ -38,8 +38,7 @@
 		data() {
 			return {
 				currentTab: 0,
-				renderTabs: [],
-				cacheKey: "uni-admin-statTabsData"
+				renderTabs: []
 			};
 		},
 		props: {
@@ -104,15 +103,9 @@
 		mounted() {
 			this.init()
 		},
-		computed:{
-
-		},
 		watch: {
-			current: {
-				immediate: true,
-				handler(val) {
-					this.currentTab = val
-				}
+			current(val) {
+				this.currentTab = val
 			},
 
 			// value(val) {
@@ -139,7 +132,7 @@
 		methods: {
 			init() {
 				if (this.mode.indexOf('platform') > -1) {
-					this.renderTabs = this.getCache() || [];
+					this.renderTabs = uni.getStorageSync(this.last)
 					this.getPlatform()
 				} else if (this.mode === 'date') {
 					const dates = [{
@@ -202,7 +195,7 @@
 						} else {
 							this.setAllItem(platforms)
 						}
-						this.setCache(platforms);
+						uni.setStorageSync(this.last, platforms)
 						this.renderTabs = platforms
 					})
 			},
@@ -211,28 +204,7 @@
 					name,
 					_id
 				})
-			},
-			// 获取当前缓存key
-			getCurrentCacheKey(){
-				return this.mode;
-			},
-			// 获取缓存
-			getCache(name=this.getCurrentCacheKey()){
-				let cacheData = uni.getStorageSync(this.cacheKey) || {};
-				return cacheData[name];
-			},
-			// 设置缓存
-			setCache(value, name=this.getCurrentCacheKey()){
-				let cacheData = uni.getStorageSync(this.cacheKey) || {};
-				cacheData[name] = value;
-				uni.setStorageSync(this.cacheKey, cacheData);
-			},
-			// 删除缓存
-			removeCache(name=this.getCurrentCacheKey()){
-				let cacheData = uni.getStorageSync(this.cacheKey) || {};
-				delete cacheData[name];
-				uni.setStorageSync(this.cacheKey, cacheData);
-			},
+			}
 		}
 	}
 </script>
@@ -350,11 +322,10 @@
 			flex-wrap: unset;
 			overflow-x: auto !important;
 		}
-		/* #ifdef H5 */
+
 		::-webkit-scrollbar {
 			display: none;
 		}
-		/* #endif */
 	}
 
 	/* #endif */

@@ -1,4 +1,4 @@
-<!--
+<!-- 
  * qiun-data-charts 秋云高性能跨全端图表组件
  * Copyright (c) 2021 QIUN® 秋云 https://www.ucharts.cn All rights reserved.
  * Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
@@ -7,13 +7,13 @@
  *
  * uCharts®官方网站
  * https://www.uCharts.cn
- *
+ * 
  * 开源地址:
  * https://gitee.com/uCharts/uCharts
- *
+ * 
  * uni-app插件市场地址：
  * http://ext.dcloud.net.cn/plugin?id=271
- *
+ * 
  -->
 <template>
   <view class="chartsview" :id="'ChartBoxId'+cid">
@@ -32,9 +32,9 @@
         :style="{ background: background }"
         style="width: 100%;height: 100%;"
         :data-directory="directory"
-        :id="'EC'+cid"
-        :prop="echartsOpts"
-        :change:prop="rdcharts.ecinit"
+        :id="'EC'+cid" 
+        :prop="echartsOpts" 
+        :change:prop="rdcharts.ecinit" 
         :resize="echartsResize"
         :change:resize="rdcharts.ecresize"
         v-show="showchart"
@@ -407,9 +407,7 @@ export default {
       cHeight: 250,
       showchart: false,
       echarts: false,
-      echartsResize:{
-        state:false
-      },
+      echartsResize:false,
       uchartsOpts: {},
       echartsOpts: {},
       drawData:{},
@@ -497,7 +495,7 @@ export default {
           return;
         }
         if (_this.echarts) {
-          _this.echartsResize.state = !_this.echartsResize.state;
+          _this.echartsResize = !_this.echartsResize;
         } else {
           _this.resizeHandler();
         }
@@ -592,7 +590,7 @@ export default {
       if (val === true && this.mixinDatacomLoading === false) {
         setTimeout(() => {
           this.mixinDatacomErrorMessage = null;
-          this.echartsResize.state = !this.echartsResize.state;
+          this.echartsResize = !this.echartsResize;
           this.checkData(this.drawData);
         }, 200);
       }
@@ -608,7 +606,7 @@ export default {
       if (val) {
         this.emitMsg({name: 'error', params: {type:"error", errorShow: this.errorShow, msg: val, id: this.cid}});
         if(this.errorShow){
-          //console.log('[秋云图表组件]' + val);
+          console.log('[秋云图表组件]' + val);
         }
       }
     },
@@ -865,10 +863,10 @@ export default {
     },
     _clearChart() {
       let cid = this.cid
-      if (this.echarts !== true && cfu.option[cid] && cfu.option[cid].context) {
+      if (this.echrts !== true && cfu.option[cid] && cfu.option[cid].context) {
         const ctx = cfu.option[cid].context;
-        if(typeof ctx === "object" && !!!cfu.option[cid].update){
-          ctx.clearRect(0, 0, this.cWidth*this.pixel, this.cHeight*this.pixel);
+        if(typeof ctx === "object" && !cfu.option[cid].update){
+          ctx.clearRect(0, 0, this.cWidth, this.cHeight);
           ctx.draw();
         }
       }
@@ -1006,7 +1004,7 @@ export default {
               }
     	      });
     	    //#endif
-    	  }
+    	  } 
     	},this);
     },
     getImage(){
@@ -1038,14 +1036,14 @@ export default {
       this.showchart = true;
       cfu.instance[cid] = new uCharts(cfu.option[cid]);
       cfu.instance[cid].addEventListener('renderComplete', () => {
-        this.emitMsg({name: 'complete', params: {type:"complete", complete: true, id: cid, opts: cfu.instance[cid].opts}});
+        this.emitMsg({name: 'complete', params: {type:"complete", complete: true, id: cid}});
         cfu.instance[cid].delEventListener('renderComplete')
       });
       cfu.instance[cid].addEventListener('scrollLeft', () => {
-        this.emitMsg({name: 'scrollLeft', params: {type:"scrollLeft", scrollLeft: true, id: cid, opts: cfu.instance[cid].opts}});
+        this.emitMsg({name: 'scrollLeft', params: {type:"scrollLeft", scrollLeft: true, id: cid}});
       });
       cfu.instance[cid].addEventListener('scrollRight', () => {
-        this.emitMsg({name: 'scrollRight', params: {type:"scrollRight", scrollRight: true, id: cid, opts: cfu.instance[cid].opts}});
+        this.emitMsg({name: 'scrollRight', params: {type:"scrollRight", scrollRight: true, id: cid}});
       });
     },
     _updataUChart(cid) {
@@ -1162,7 +1160,7 @@ export default {
       if(cfu.option[cid].enableScroll === true && e.touches.length == 1){
         cfu.instance[cid].scrollStart(e);
       }
-      this.emitMsg({name:'getTouchStart', params:{type:"touchStart", event:e.changedTouches[0], id:cid, opts: cfu.instance[cid].opts}});
+      this.emitMsg({name:'getTouchStart', params:{type:"touchStart", event:e.changedTouches[0], id:cid}});
     },
     _touchMove(e) {
       let cid = this.cid
@@ -1180,14 +1178,14 @@ export default {
       if(this.ontouch === true && cfu.option[cid].enableScroll === true && this.onzoom === true && e.changedTouches.length == 2){
         cfu.instance[cid].dobuleZoom(e);
       }
-      this.emitMsg({name: 'getTouchMove', params: {type:"touchMove", event:e.changedTouches[0], id: cid, opts: cfu.instance[cid].opts}});
+      this.emitMsg({name: 'getTouchMove', params: {type:"touchMove", event:e.changedTouches[0], id: cid}});
     },
     _touchEnd(e) {
       let cid = this.cid
       if(cfu.option[cid].enableScroll === true && e.touches.length == 0){
         cfu.instance[cid].scrollEnd(e);
       }
-      this.emitMsg({name:'getTouchEnd', params:{type:"touchEnd", event:e.changedTouches[0], id:cid, opts: cfu.instance[cid].opts}});
+      this.emitMsg({name:'getTouchEnd', params:{type:"touchEnd", event:e.changedTouches[0], id:cid}});
       if(this.ontap === true && cfu.option[cid].enableScroll === false && this.onmovetip === true){
         this._tap(e,true)
       }
@@ -1300,7 +1298,7 @@ export default {
           cfe.option[cid].series.push(Template)
         }
       }
-
+      
       if (typeof window.echarts === 'object') {
           this.newEChart()
       }else{
@@ -1309,15 +1307,8 @@ export default {
         script.src = './uni_modules/qiun-data-charts/static/app-plus/echarts.min.js'
         // #endif
         // #ifdef H5
-        const { origin } = window.location;
-        let base_url = "";
-        // #ifdef VUE2
-        base_url = process.env.BASE_URL;
-        // #endif
-        // #ifdef VUE3
-        base_url = import.meta.env.BASE_URL;
-        // #endif
-        const rooturl = origin + base_url;
+        const { origin, pathname } = window.location
+        const rooturl = origin + pathname
         script.src = rooturl + 'uni_modules/qiun-data-charts/static/h5/echarts.min.js'
         // #endif
         script.onload = this.newEChart
@@ -1377,16 +1368,7 @@ export default {
         if(cfe.instance[cid]){
           cfe.instance[cid].off('finished')
         }
-      });
-
-      //修复init初始化实例获取宽高不正确问题
-      if(
-        typeof that[cid].$el.children[0].clientWidth != 'undefined' &&
-          (
-            Math.abs( that[cid].$el.children[0].clientWidth - cfe.instance[cid].getWidth() )>3 ||
-            Math.abs( that[cid].$el.children[0].clientHeight - cfe.instance[cid].getHeight() )>3
-          )
-      ){this.ecresize();}
+      })
     },
     tooltipPosition(){
       return (point, params, dom, rect, size) => {
@@ -1396,9 +1378,9 @@ export default {
       	let viewHeight = size.viewSize[1]
       	let boxWidth = size.contentSize[0]
       	let boxHeight = size.contentSize[1]
-      	let posX = x + 30
-      	let posY = y + 30
-      	if (posX + boxWidth > viewWidth) {
+      	let posX = x + 30 
+      	let posY = y + 30 
+      	if (posX + boxWidth > viewWidth) { 
       		posX = x - boxWidth - 30
       	}
       	if (posY + boxHeight > viewHeight) {
@@ -1438,14 +1420,14 @@ export default {
       let cid = this.rid
       cfu.instance[cid] = new uChartsRD(cfu.option[cid])
       cfu.instance[cid].addEventListener('renderComplete', () => {
-        that[cid].callMethod('emitMsg',{name:"complete",params:{type:"complete",complete:true,id:cid, opts: cfu.instance[cid].opts}})
+        that[cid].callMethod('emitMsg',{name:"complete",params:{type:"complete",complete:true,id:cid}})
         cfu.instance[cid].delEventListener('renderComplete')
       });
       cfu.instance[cid].addEventListener('scrollLeft', () => {
-        that[cid].callMethod('emitMsg',{name:"scrollLeft",params:{type:"scrollLeft",scrollLeft:true,id:cid, opts: cfu.instance[cid].opts}})
+        that[cid].callMethod('emitMsg',{name:"scrollLeft",params:{type:"scrollLeft",scrollLeft:true,id:cid}})
       });
       cfu.instance[cid].addEventListener('scrollRight', () => {
-        that[cid].callMethod('emitMsg',{name:"scrollRight",params:{type:"scrollRight",scrollRight:true,id:cid, opts: cfu.instance[cid].opts}})
+        that[cid].callMethod('emitMsg',{name:"scrollRight",params:{type:"scrollRight",scrollRight:true,id:cid}})
       });
     },
     updataUChart() {
@@ -1532,7 +1514,7 @@ export default {
       if(cfu.option[cid].enableScroll === true && e.touches.length == 1){
         cfu.instance[cid].scrollStart(e);
       }
-      that[cid].callMethod('emitMsg',{name:"getTouchStart",params:{type:"touchStart",event:e.changedTouches[0],id:cid, opts: cfu.instance[cid].opts}})
+      that[cid].callMethod('emitMsg',{name:"getTouchStart",params:{type:"touchStart",event:e.changedTouches[0],id:cid}})
     },
     touchMove(e) {
       let cid = this.rid
@@ -1552,7 +1534,7 @@ export default {
       if(ontouch === true && cfu.option[cid].enableScroll === true && cfu.option[cid].onzoom === true && e.changedTouches.length == 2){
         cfu.instance[cid].dobuleZoom(e);
       }
-      that[cid].callMethod('emitMsg',{name:"getTouchMove",params:{type:"touchMove",event:e.changedTouches[0],id:cid, opts: cfu.instance[cid].opts}})
+      that[cid].callMethod('emitMsg',{name:"getTouchMove",params:{type:"touchMove",event:e.changedTouches[0],id:cid}})
     },
     touchEnd(e) {
       let cid = this.rid
@@ -1561,7 +1543,7 @@ export default {
       if(cfu.option[cid].enableScroll === true && e.touches.length == 0){
         cfu.instance[cid].scrollEnd(e);
       }
-      that[cid].callMethod('emitMsg',{name:"getTouchEnd",params:{type:"touchEnd",event:e.changedTouches[0],id:cid, opts: cfu.instance[cid].opts}})
+      that[cid].callMethod('emitMsg',{name:"getTouchEnd",params:{type:"touchEnd",event:e.changedTouches[0],id:cid}})
     },
     mouseDown(e) {
       let cid = this.rid
@@ -1574,7 +1556,7 @@ export default {
       e.changedTouches.unshift(tmpe)
       cfu.instance[cid].scrollStart(e)
       cfu.option[cid].mousedown=true;
-      that[cid].callMethod('emitMsg',{name:"getTouchStart",params:{type:"mouseDown",event:tmpe,id:cid, opts: cfu.instance[cid].opts}})
+      that[cid].callMethod('emitMsg',{name:"getTouchStart",params:{type:"mouseDown",event:tmpe,id:cid}})
     },
     mouseMove(e) {
       let cid = this.rid
@@ -1588,7 +1570,7 @@ export default {
       e.changedTouches.unshift(tmpe)
       if(cfu.option[cid].mousedown){
         cfu.instance[cid].scroll(e)
-        that[cid].callMethod('emitMsg',{name:"getTouchMove",params:{type:"mouseMove",event:tmpe,id:cid, opts: cfu.instance[cid].opts}})
+        that[cid].callMethod('emitMsg',{name:"getTouchMove",params:{type:"mouseMove",event:tmpe,id:cid}})
       }else if(cfu.instance[cid]){
         if(tooltipShow==true){
           this.showTooltip(e,cid)
@@ -1606,7 +1588,7 @@ export default {
       e.changedTouches.unshift(tmpe)
       cfu.instance[cid].scrollEnd(e)
       cfu.option[cid].mousedown=false;
-      that[cid].callMethod('emitMsg',{name:"getTouchEnd",params:{type:"mouseUp",event:tmpe,id:cid, opts: cfu.instance[cid].opts}})
+      that[cid].callMethod('emitMsg',{name:"getTouchEnd",params:{type:"mouseUp",event:tmpe,id:cid}})
     },
   }
 }

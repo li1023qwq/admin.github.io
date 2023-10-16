@@ -1,31 +1,25 @@
 <template>
 	<view class="uni-stat__select">
 		<span v-if="label" class="uni-label-text hide-on-phone">{{label + '：'}}</span>
-		<view class="uni-stat-box" :class="{'uni-stat__actived': current}">
-			<view class="uni-select" :class="{'uni-select--disabled':disabled}">
-				<view class="uni-select__input-box" @click="toggleSelector">
-					<view v-if="current" class="uni-select__input-text">{{current}}</view>
-					<view v-else class="uni-select__input-text uni-select__input-placeholder">{{typePlaceholder}}</view>
-					<view v-if="current && clear && !disabled" @click.stop="clearVal" >
-						<uni-icons type="clear" color="#c0c4cc" size="24"/>
+		<view class="uni-select">
+			<view class="uni-select__input-box" @click="toggleSelector">
+				<view v-if="current" class="uni-select__input-text">{{current}}</view>
+				<view v-else class="uni-select__input-text uni-select__input-placeholder">{{typePlaceholder}}</view>
+				<uni-icons v-if="current && clear" type="clear" color="#e1e1e1" size="18" @click="clearVal" />
+				<uni-icons v-else :type="showSelector? 'top' : 'bottom'" size="14" color="#999" />
+			</view>
+			<view class="uni-select--mask" v-if="showSelector" @click="toggleSelector" />
+			<view class="uni-select__selector" v-if="showSelector">
+				<view class="uni-popper__arrow"></view>
+				<scroll-view scroll-y="true" class="uni-select__selector-scroll">
+					<view class="uni-select__selector-empty" v-if="renderData.length === 0">
+						<text>{{emptyTips}}</text>
 					</view>
-					<view v-else>
-						<uni-icons :type="showSelector? 'top' : 'bottom'" size="14" color="#999" />
+					<view v-else class="uni-select__selector-item" v-for="(item,index) in renderData" :key="index"
+						@click="change(item)">
+						<text>{{formatItemName(item)}}</text>
 					</view>
-				</view>
-				<view class="uni-select--mask" v-if="showSelector" @click="toggleSelector" />
-				<view class="uni-select__selector" v-if="showSelector">
-					<view class="uni-popper__arrow"></view>
-					<scroll-view scroll-y="true" class="uni-select__selector-scroll">
-						<view class="uni-select__selector-empty" v-if="mixinDatacomResData.length === 0">
-							<text>{{emptyTips}}</text>
-						</view>
-						<view v-else class="uni-select__selector-item" v-for="(item,index) in mixinDatacomResData" :key="index"
-							@click="change(item)">
-							<text :class="{'uni-select__selector__disabled': item.disable}">{{formatItemName(item)}}</text>
-						</view>
-					</scroll-view>
-				</view>
+				</scroll-view>
 			</view>
 		</view>
 	</view>
@@ -42,13 +36,21 @@
 	 * @property {Boolean} emptyText 没有数据时显示的文字 ，本地数据无效
 	 * @property {String} label 左侧标题
 	 * @property {String} placeholder 输入框的提示文字
-	 * @property {Boolean} disabled 是否禁用
 	 * @event {Function} change  选中发生变化触发
 	 */
 
 	export default {
-		name: "uni-data-select",
+		name: "uni-stat-select",
 		mixins: [uniCloud.mixinDatacom || {}],
+		data() {
+			return {
+				showSelector: false,
+				current: '',
+				mixinDatacomResData: [],
+				apps: [],
+				channels: []
+			};
+		},
 		props: {
 			localdata: {
 				type: Array,
@@ -57,11 +59,11 @@
 				}
 			},
 			value: {
-				type: [String, Number],
+				type: [String, Number, Array],
 				default: ''
 			},
 			modelValue: {
-				type: [String, Number],
+				type: [String, Number, Array],
 				default: ''
 			},
 			label: {
@@ -80,36 +82,22 @@
 				type: Boolean,
 				default: true
 			},
+			storage: {
+				type: Boolean,
+				default: true
+			},
 			defItem: {
 				type: Number,
 				default: 0
-			},
-			disabled: {
-				type: Boolean,
-				default: false
-			},
-			// 格式化输出 用法 field="_id as value, version as text, uni_platform as label" format="{label} - {text}"
-			format: {
-				type: String,
-				default: ''
-			},
-		},
-		data() {
-			return {
-				showSelector: false,
-				current: '',
-				mixinDatacomResData: [],
-				apps: [],
-				channels: [],
-				cacheKey: "uni-data-select-lastSelectedValue",
-			};
+			}
 		},
 		created() {
-			this.debounceGet = this.debounce(() => {
-				this.query();
-			}, 300);
+			this.getData = this.debounce(() => this.mixinDatacomEasyGet())
+			this.last_data = `${this.collection}_last_data`
+			this.last_selected = `${this.collection}_last_selected_option_value`
 			if (this.collection && !this.localdata.length) {
-				this.debounceGet();
+				this.storage && (this.mixinDatacomResData = uni.getStorageSync(this.last_data))
+				this.getData()
 			}
 		},
 		computed: {
@@ -119,44 +107,65 @@
 					'opendb-app-channels': '渠道',
 					'opendb-app-list': '应用'
 				}
-				const common = this.placeholder
+				const common = '请选择'
 				const placeholder = text[this.collection]
 				return placeholder ?
 					common + placeholder :
 					common
 			},
-			valueCom(){
-				// #ifdef VUE3
-				return this.modelValue;
-				// #endif
-				// #ifndef VUE3
-				return this.value;
-				// #endif
+			renderData() {
+				const data = []
+				if (this.mixinDatacomResData) {
+					const uniqueNames = new Set()
+					this.mixinDatacomResData.map(v => uniqueNames.add(v.text))
+					uniqueNames.forEach(text => {
+						let value = this.mixinDatacomResData.map(v => v.text === text && v.value).filter(Boolean)
+						value = value.length < 2 ? value[0] : value
+						data.push({
+							text,
+							value
+						})
+					})
+				}
+				return data
 			}
 		},
 		watch: {
 			localdata: {
 				immediate: true,
 				handler(val, old) {
-					if (Array.isArray(val) && old !== val) {
+					if (Array.isArray(val)) {
 						this.mixinDatacomResData = val
 					}
 				}
 			},
-			valueCom(val, old) {
+			// #ifndef VUE3
+			value() {
 				this.initDefVal()
 			},
+			// #endif
+			// #ifdef VUE3
+			modelValue() {
+				this.initDefVal()
+			},
+			// #endif
 			mixinDatacomResData: {
 				immediate: true,
 				handler(val) {
 					if (val.length) {
 						this.initDefVal()
+						if (this.collection) {
+							uni.setStorageSync(this.last_data, val)
+						}
 					}
 				}
+			},
+			where(val) {
+				this.getData()
 			}
 		},
 		methods: {
-			debounce(fn, time = 100){
+			debounce(fn, time = 100) {
 				let timer = null
 				return function(...args) {
 					if (timer) clearTimeout(timer)
@@ -165,84 +174,54 @@
 					}, time)
 				}
 			},
-			// 执行数据库查询
-			query(){
-				this.mixinDatacomEasyGet();
-			},
-			// 监听查询条件变更事件
-			onMixinDatacomPropsChange(){
-				if (this.collection) {
-					this.debounceGet();
-				}
-			},
 			initDefVal() {
 				let defValue = ''
-				if ((this.valueCom || this.valueCom === 0) && !this.isDisabled(this.valueCom)) {
-					defValue = this.valueCom
+				// todo:
+				if (this.value || this.value === 0) {
+					defValue = this.value
+				} else if (this.modelValue || this.modelValue === 0) {
+					defValue = this.modelValue
 				} else {
 					let strogeValue
-					if (this.collection) {
-						strogeValue = this.getCache()
+					if (this.collection && this.storage) {
+						strogeValue = uni.getStorageSync(this.last_selected)
 					}
 					if (strogeValue || strogeValue === 0) {
 						defValue = strogeValue
 					} else {
 						let defItem = ''
-						if (this.defItem > 0 && this.defItem <= this.mixinDatacomResData.length) {
+						if (this.defItem > 0 && this.defItem < this.mixinDatacomResData.length) {
 							defItem = this.mixinDatacomResData[this.defItem - 1].value
 						}
 						defValue = defItem
 					}
-          if (defValue || defValue === 0) {
-					  this.emit(defValue)
-          }
+					this.emit(defValue)
 				}
-				const def = this.mixinDatacomResData.find(item => item.value === defValue)
+				const def = this.renderData.find(item => JSON.stringify(item.value) === JSON.stringify(defValue))
 				this.current = def ? this.formatItemName(def) : ''
-			},
-
-			/**
-			 * @param {[String, Number]} value
-			 * 判断用户给的 value 是否同时为禁用状态
-			 */
-			isDisabled(value) {
-				let isDisabled = false;
-
-				this.mixinDatacomResData.forEach(item => {
-					if (item.value === value) {
-						isDisabled = item.disable
-					}
-				})
-
-				return isDisabled;
 			},
 
 			clearVal() {
 				this.emit('')
 				if (this.collection) {
-					this.removeCache()
+					uni.removeStorageSync(this.last_selected)
 				}
 			},
 			change(item) {
-				if (!item.disable) {
-					this.showSelector = false
-					this.current = this.formatItemName(item)
-					this.emit(item.value)
-				}
+				this.showSelector = false
+				this.current = this.formatItemName(item)
+				this.emit(item.value)
 			},
 			emit(val) {
+				this.$emit('change', val)
 				this.$emit('input', val)
 				this.$emit('update:modelValue', val)
-				this.$emit('change', val)
 				if (this.collection) {
-					this.setCache(val);
+					uni.setStorageSync(this.last_selected, val)
 				}
 			},
-			toggleSelector() {
-				if (this.disabled) {
-					return
-				}
 
+			toggleSelector() {
 				this.showSelector = !this.showSelector
 			},
 			formatItemName(item) {
@@ -252,61 +231,19 @@
 					channel_code
 				} = item
 				channel_code = channel_code ? `(${channel_code})` : ''
-
-				if (this.format) {
-					// 格式化输出
-					let str = "";
-					str = this.format;
-					for (let key in item) {
-						str = str.replace(new RegExp(`{${key}}`,"g"),item[key]);
-					}
-					return str;
-				} else {
-					return this.collection.indexOf('app-list') > 0 ?
-						`${text}(${value})` :
-						(
-							text ?
-							text :
-							`未命名${channel_code}`
-						)
-				}
-			},
-			// 获取当前加载的数据
-			getLoadData(){
-				return this.mixinDatacomResData;
-			},
-			// 获取当前缓存key
-			getCurrentCacheKey(){
-				return this.collection;
-			},
-			// 获取缓存
-			getCache(name=this.getCurrentCacheKey()){
-				let cacheData = uni.getStorageSync(this.cacheKey) || {};
-				return cacheData[name];
-			},
-			// 设置缓存
-			setCache(value, name=this.getCurrentCacheKey()){
-				let cacheData = uni.getStorageSync(this.cacheKey) || {};
-				cacheData[name] = value;
-				uni.setStorageSync(this.cacheKey, cacheData);
-			},
-			// 删除缓存
-			removeCache(name=this.getCurrentCacheKey()){
-				let cacheData = uni.getStorageSync(this.cacheKey) || {};
-				delete cacheData[name];
-				uni.setStorageSync(this.cacheKey, cacheData);
-			},
+				return this.collection.indexOf('app-list') > 0 ?
+					`${text}(${value})` :
+					(
+						text ?
+						text :
+						`未命名${channel_code}`
+					)
+			}
 		}
 	}
 </script>
 
-<style lang="scss">
-	$uni-base-color: #6a6a6a !default;
-	$uni-main-color: #333 !default;
-	$uni-secondary-color: #909399 !default;
-	$uni-border-3: #e5e5e5;
-
-
+<style>
 	/* #ifndef APP-NVUE */
 	@media screen and (max-width: 500px) {
 		.hide-on-phone {
@@ -318,41 +255,28 @@
 	.uni-stat__select {
 		display: flex;
 		align-items: center;
-		// padding: 15px;
-		/* #ifdef H5 */
+		padding: 15px;
 		cursor: pointer;
-		/* #endif */
-		width: 100%;
-		flex: 1;
-		box-sizing: border-box;
-	}
-
-	.uni-stat-box {
-		width: 100%;
-		flex: 1;
 	}
 
 	.uni-stat__actived {
-		width: 100%;
-		flex: 1;
-		// outline: 1px solid #2979ff;
+		outline: 1px solid #2979ff;
 	}
 
 	.uni-label-text {
 		font-size: 14px;
 		font-weight: bold;
-		color: $uni-base-color;
+		color: #555;
 		margin: auto 0;
 		margin-right: 5px;
 	}
 
 	.uni-select {
 		font-size: 14px;
-		border: 1px solid $uni-border-3;
+		border: 1px solid #DCDFE6;
 		box-sizing: border-box;
 		border-radius: 4px;
 		padding: 0 5px;
-		padding-left: 10px;
 		position: relative;
 		/* #ifndef APP-NVUE */
 		display: flex;
@@ -360,27 +284,18 @@
 		/* #endif */
 		flex-direction: row;
 		align-items: center;
-		border-bottom: solid 1px $uni-border-3;
-		width: 100%;
-		flex: 1;
-		height: 35px;
-
-		&--disabled {
-			background-color: #f5f7fa;
-			cursor: not-allowed;
-		}
+		border-bottom: solid 1px #DDDDDD;
 	}
 
 	.uni-select__label {
 		font-size: 16px;
-		// line-height: 22px;
-		height: 35px;
+		line-height: 22px;
 		padding-right: 10px;
-		color: $uni-secondary-color;
+		color: #999999;
 	}
 
 	.uni-select__input-box {
-		height: 35px;
+		min-height: 36px;
 		position: relative;
 		/* #ifndef APP-NVUE */
 		display: flex;
@@ -399,7 +314,7 @@
 
 	.uni-select__input-plac {
 		font-size: 14px;
-		color: $uni-secondary-color;
+		color: #999;
 	}
 
 	.uni-select__selector {
@@ -414,7 +329,7 @@
 		border: 1px solid #EBEEF5;
 		border-radius: 6px;
 		box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-		z-index: 3;
+		z-index: 2;
 		padding: 4px 0;
 	}
 
@@ -425,24 +340,16 @@
 		/* #endif */
 	}
 
-	/* #ifdef H5 */
-	@media (min-width: 768px) {
-		.uni-select__selector-scroll {
-			max-height: 600px;
-		}
-	}
-	/* #endif */
-
 	.uni-select__selector-empty,
 	.uni-select__selector-item {
 		/* #ifndef APP-NVUE */
 		display: flex;
 		cursor: pointer;
 		/* #endif */
-		line-height: 35px;
+		line-height: 36px;
 		font-size: 14px;
 		text-align: center;
-		/* border-bottom: solid 1px $uni-border-3; */
+		/* border-bottom: solid 1px #DDDDDD; */
 		padding: 0px 10px;
 	}
 
@@ -455,11 +362,6 @@
 		/* #ifndef APP-NVUE */
 		border-bottom: none;
 		/* #endif */
-	}
-
-	.uni-select__selector__disabled {
-		opacity: 0.4;
-		cursor: default;
 	}
 
 	/* picker 弹出层通用的指示小三角 */
@@ -492,9 +394,8 @@
 	}
 
 	.uni-select__input-text {
-		// width: 280px;
-		width: 100%;
-		color: $uni-main-color;
+		width: 280px;
+		color: #333;
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		-o-text-overflow: ellipsis;
@@ -502,8 +403,7 @@
 	}
 
 	.uni-select__input-placeholder {
-		color: $uni-base-color;
-		font-size: 12px;
+		color: #666;
 	}
 
 	.uni-select--mask {
@@ -512,6 +412,5 @@
 		bottom: 0;
 		right: 0;
 		left: 0;
-		z-index: 2;
 	}
 </style>

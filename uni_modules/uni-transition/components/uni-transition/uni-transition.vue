@@ -1,10 +1,5 @@
 <template>
-  <!-- #ifndef APP-NVUE -->
-  <view v-show="isShow" ref="ani" :animation="animationData" :class="customClass" :style="transformStyles" @click="onClick"><slot></slot></view>
-  <!-- #endif -->
-  <!-- #ifdef APP-NVUE -->
-  <view v-if="isShow" ref="ani" :animation="animationData" :class="customClass" :style="transformStyles" @click="onClick"><slot></slot></view>
-  <!-- #endif -->
+	<view v-if="isShow" ref="ani" :animation="animationData" :class="customClass" :style="transformStyles" @click="onClick"><slot></slot></view>
 </template>
 
 <script>
@@ -53,11 +48,7 @@ export default {
 		customClass:{
 			type: String,
 			default: ''
-		},
-		onceRender:{
-			type:Boolean,
-			default:false
-		},
+		}
 	},
 	data() {
 		return {

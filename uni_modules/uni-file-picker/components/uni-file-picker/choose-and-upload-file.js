@@ -7,7 +7,7 @@ function chooseImage(opts) {
 	const {
 		count,
 		sizeType = ['original', 'compressed'],
-		sourceType,
+		sourceType = ['album', 'camera'],
 		extension
 	} = opts
 	return new Promise((resolve, reject) => {
@@ -33,7 +33,7 @@ function chooseVideo(opts) {
 		camera,
 		compressed,
 		maxDuration,
-		sourceType,
+		sourceType = ['album', 'camera'],
 		extension
 	} = opts;
 	return new Promise((resolve, reject) => {

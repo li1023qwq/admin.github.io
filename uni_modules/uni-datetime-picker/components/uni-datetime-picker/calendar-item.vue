@@ -13,10 +13,10 @@
 				'uni-calendar-item--after-checked':weeks.afterMultiple,
 				'uni-calendar-item--disable':weeks.disable,
 				}">
-			<text v-if="selected && weeks.extraInfo" class="uni-calendar-item__weeks-box-circle"></text>
+			<text v-if="selected&&weeks.extraInfo" class="uni-calendar-item__weeks-box-circle"></text>
 			<text class="uni-calendar-item__weeks-box-text uni-calendar-item__weeks-box-text-disable uni-calendar-item--checked-text">{{weeks.date}}</text>
 		</view>
-		<view :class="{'uni-calendar-item--today': weeks.isToday}"></view>
+		<view :class="{'uni-calendar-item--isDay': weeks.isDay}"></view>
 	</view>
 </template>
 
@@ -40,6 +40,10 @@
 				default: () => {
 					return []
 				}
+			},
+			lunar: {
+				type: Boolean,
+				default: false
 			},
 			checkHover: {
 				type: Boolean,
@@ -79,6 +83,11 @@
 		color: darken($color: $uni-primary, $amount: 40%);
 	}
 
+	.uni-calendar-item__weeks-lunar-text {
+		font-size: 12px;
+		color: #333;
+	}
+
 	.uni-calendar-item__weeks-box-item {
 		position: relative;
 		/* #ifndef APP-NVUE */
@@ -107,6 +116,7 @@
 	}
 
 	.uni-calendar-item__weeks-box .uni-calendar-item--disable {
+		// background-color: rgba(249, 249, 249, $uni-opacity-disabled);
 		cursor: default;
 	}
 
@@ -114,7 +124,7 @@
 		color: #D1D1D1;
 	}
 
-	.uni-calendar-item--today {
+	.uni-calendar-item--isDay {
 		position: absolute;
 		top: 10px;
 		right: 17%;

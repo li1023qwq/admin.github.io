@@ -40,12 +40,12 @@
 			// 当前激活菜单的文字颜色
 			activeTextColor: {
 				type: String,
-				default: '#42B983'
+				default: '#ffffff'
 			},
 			// 当前激活菜单的背景色
 			activeBackgroundColor: {
 				type: String,
-				default: 'inherit'
+				default: '#18bc9c'
 			},
 			// 如果 index 为 Object ，需要指定选中字段的名称
 			activeKey: {
@@ -102,7 +102,8 @@
 						if(isActive) break
 					}
 					if(!isActive){
-						this.closeAll()
+						//@2022-04-27避免进入二级地址后，左边菜单关闭问题
+						// this.closeAll()
 					}
 				}
 			}
@@ -133,6 +134,9 @@
 					active = subItem.index[this.activeKey] || ''
 				}else{
 					active = subItem.index
+				}
+				if(!active.startsWith("/")){
+					active="/"+active;
 				}
 				if (subItem.index && this.activeIndex === active) {
 					isActive = true

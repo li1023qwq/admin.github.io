@@ -1,0 +1,11 @@
+{
+	"subPackages": [{
+		"root": "uni_modules/tian-article",
+		"pages": [{
+			"path": "pages/article/detail",
+			"style": {
+				"navigationBarTitleText": "文章详细"
+			}
+		}]
+	}]
+}

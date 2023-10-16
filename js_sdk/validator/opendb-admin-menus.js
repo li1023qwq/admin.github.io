@@ -35,15 +35,7 @@ export default {
     "rules": [
       {
         "format": "string"
-      },
-			{
-				validateFunction:function(rule,value,data,callback){
-					if (value !== "" && value.indexOf("http") === -1 && value.indexOf("/") !==0){
-						callback('URL必须以/开头，如/pages/index/index')
-					}
-					return true
-				}
-			}
+      }
     ]
   },
   "sort": {

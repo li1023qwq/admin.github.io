@@ -1,43 +1,30 @@
+import Vue from 'vue'
 import App from './App'
 import store from './store'
 import plugin from './js_sdk/uni-admin/plugin'
 import messages from './i18n/index.js'
-
 const lang = uni.getLocale()
-// #ifndef VUE3
-import Vue from 'vue'
-import VueI18n from 'vue-i18n'
+console.log("lang", lang)
 Vue.config.productionTip = false
+
+import VueI18n from 'vue-i18n'
 Vue.use(VueI18n)
-// 閫氳繃閫夐」鍒涘缓 VueI18n 瀹炰緥
+// 通过选项创建 VueI18n 实例
 const i18n = new VueI18n({
-  locale: lang, // 璁剧疆鍦板尯
-  messages, // 璁剧疆鍦板尯淇℃伅
+	locale: lang, // 设置地区
+	messages, // 设置地区信息
 })
+
+import mixin from '@/common/js/mixin.js'
+Vue.mixin(mixin)
+
 Vue.use(plugin)
+
 App.mpType = 'app'
+
 const app = new Vue({
-  i18n,
-  store,
-  ...App
+	i18n,
+	store,
+	...App
 })
 app.$mount()
-// #endif
-
-// #ifdef VUE3
-import { createSSRApp } from 'vue'
-import { createI18n } from 'vue-i18n'
-export function createApp() {
-  const app = createSSRApp(App)
-  const i18n = createI18n({
-  	locale: lang,
-  	messages
-  })
-  app.use(i18n)
-  app.use(plugin)
-  app.use(store)
-  return {
-    app
-  }
-}
-// #endif

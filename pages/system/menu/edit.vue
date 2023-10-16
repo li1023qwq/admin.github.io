@@ -15,7 +15,7 @@
 				 class="uni-form-item-tips"></uni-link>
 			</uni-forms-item>
 			<uni-forms-item name="url" label="页面URL">
-				<uni-easyinput v-model="formData.url" :clearable="false" placeholder="URL必须是/开头，URL为空代表是目录而不是叶子节点" />
+				<uni-easyinput v-model="formData.url" :clearable="false" placeholder="URL为空代表是目录而不是叶子节点" />
 			</uni-forms-item>
 			<uni-forms-item name="sort" label="序号">
 				<uni-easyinput v-model="formData.sort" :clearable="false" placeholder="请输入菜单序号（越大越靠后）" />
@@ -23,9 +23,9 @@
 			<uni-forms-item name="parent_id" label="父菜单标识">
 				<uni-easyinput v-model="formData.parent_id" :clearable="false" placeholder="请输入父级菜单标识, 一级菜单不需要填写" />
 			</uni-forms-item>
-			<uni-forms-item name="permission" label="权限列表" class="flex-center-x">
-				<uni-data-checkbox :multiple="true" v-model="formData.permission" collection="uni-id-permissions" :page-size="500" field="permission_name as text, permission_id as value" />
-				<view class="uni-form-item-tips">
+			<uni-forms-item name="permission" label="权限列表" style="">
+				<uni-data-checkbox :multiple="true" v-model="formData.permission" collection="uni-id-permissions" field="permission_name as text, permission_id as value" :pageSize="500"/>
+				<view class="colorBlue">
 					当用户拥有以上被选中的权限时，可以访问此菜单。建议仅对子菜单配置权限，父菜单会自动包含。如不选择权限，意味着仅超级管理员可访问本菜单
 				</view>
 			</uni-forms-item>
@@ -34,8 +34,8 @@
 			</uni-forms-item>
 
 			<view class="uni-button-group">
-				<button type="primary" class="uni-button" @click="submitForm" style="width: 100px;">{{$t('common.button.submit')}}</button>
-				<navigator open-type="navigateBack" style="margin-left: 15px;"><button class="uni-button" style="width: 100px;">{{$t('common.button.back')}}</button></navigator>
+				<button type="primary" class="uni-button" @click="submitForm" style="width: 100px;">提交</button>
+				<navigator open-type="navigateBack" style="margin-left: 15px;"><button class="uni-button" style="width: 100px;">返回</button></navigator>
 			</view>
 			<uni-popup class="icon-modal-box" ref="iconPopup" type="center">
 				<view class="icon-modal icon-modal-pc">
@@ -49,19 +49,22 @@
 <script>
 	import validator from '@/js_sdk/validator/opendb-admin-menus.js';
 	import Icons from '@/pages/demo/icons/icons.vue'
+	import {
+		mapActions
+	} from 'vuex'
 
 	const db = uniCloud.database();
 	const dbCmd = db.command;
 	const dbCollectionName = 'opendb-admin-menus';
 
 	function getValidator(fields) {
-		let result = {}
+		let reuslt = {}
 		for (let key in validator) {
 			if (fields.includes(key)) {
-				result[key] = validator[key]
+				reuslt[key] = validator[key]
 			}
 		}
-		return result
+		return reuslt
 	}
 
 	export default {
@@ -91,6 +94,9 @@
 			this.getDetail(id)
 		},
 		methods: {
+			...mapActions({
+				init: 'app/init'
+			}),
 			/**
 			 * 触发表单提交
 			 */
@@ -117,20 +123,18 @@
 					title: '修改中...',
 					mask: true
 				})
-				// 使用 uni-clientDB 提交数据
-				db.collection(dbCollectionName).doc(this.formDataId).update(value).then((res) => {
-				    uni.showToast({
-				        title: '修改成功'
-				    })
-				    this.getOpenerEventChannel().emit('refreshData')
-				    setTimeout(() => uni.navigateBack(), 500)
-				}).catch((err) => {
-				    uni.showModal({
-				        content: err.message || '请求服务失败',
-				        showCancel: false
-				    })
+
+				this.$request('system/menu/update', Object.assign({
+					_id: this.formDataId
+				}, value)).then((res) => {
+					uni.showToast({
+						title: '修改成功'
+					})
+					this.init()
+					this.getOpenerEventChannel().emit('refreshData')
+					setTimeout(() => uni.navigateBack(), 500)
 				}).finally(() => {
-				    uni.hideLoading()
+					uni.hideLoading()
 				})
 			},
 
@@ -180,9 +184,5 @@
 		.icon-modal-pc {
 			width: 600px;
 		}
-	}
-
-	::v-deep .uni-forms-item__label {
-		width: 90px !important;
 	}
 </style>

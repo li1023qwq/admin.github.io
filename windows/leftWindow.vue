@@ -1,7 +1,7 @@
 <template>
 	<scroll-view class="sidebar" scroll-y="true">
 		<uni-data-menu ref="menu" :value="currentMenu" :staticMenu="staticMenu" collection="opendb-admin-menus"
-			:page-size="500" :field="field" where="enable==true" orderby="sort asc" active-text-color="#409eff" @select="select">
+			:page-size="500" :field="field" orderby="sort asc" active-text-color="#ffffff" @select="select">
 		</uni-data-menu>
 	</scroll-view>
 </template>
@@ -22,13 +22,10 @@
 		},
 		computed: {
 			...mapState('app', ['inited', 'navMenu', 'active']),
-			userInfo () {
-				return this.$uniIdPagesStore.store.userInfo
-			}
+			...mapState('user', ['userInfo']),
 		},
-
+		// #ifdef H5
 		watch: {
-			// #ifdef H5
 			$route: {
 				immediate: true,
 				handler(newRoute, oldRoute) {
@@ -38,12 +35,10 @@
 					}
 				}
 			},
-			// #endif
 			userInfo: {
-				// immediate: true,
+				immediate: true,
 				handler(newVal, oldVal) {
 					if (newVal) {
-						// 当用户信息发生变化后，重新加载左侧menu
 						this.$nextTick(function() {
 							this.$refs.menu.load()
 						})
@@ -51,22 +46,19 @@
 				}
 			}
 		},
+		// #endif
 		methods: {
 			...mapActions({
 				setRoutes: 'app/setRoutes'
 			}),
 			select(e, routes) {
 				let url = e.value
+
 				if (!url) {
 					url = this.active
 				}
-				this.clickMenuItem(url)
 				this.setRoutes(routes)
-				// #ifdef H5
-				// #ifdef VUE3
-				uni.hideLeftWindow()
-				// #endif
-				// #endif
+				this.clickMenuItem(url)
 			},
 			clickMenuItem(url) {
 				// #ifdef H5
@@ -79,13 +71,8 @@
 				if (url[0] !== '/' && url.indexOf('http') !== 0) {
 					url = '/' + url
 				}
-				// #ifndef H5
-				if (url === "/") {
-					url = config.index.url;
-				}
-				// #endif
 				// TODO 后续要调整
-				uni.redirectTo({
+				uni.navigateTo({
 					url: url,
 					fail: () => {
 						uni.showModal({
@@ -110,19 +97,13 @@
 	.sidebar {
 		position: fixed;
 		// top: var(--top-window-height); // useless
-		width: 240px;
+		width: 230px;
 		height: calc(100vh - (var(--top-window-height)));
 		box-sizing: border-box;
 		border-right: 1px solid darken($left-window-bg-color, 8%);
 		background-color: $left-window-bg-color;
 		padding-bottom: 10px;
 	}
-	/* #ifdef H5 */
-	.sidebar ::-webkit-scrollbar {
-		display: none;
-		// scrollbar-width: thin;
-	}
-	/* #endif */
 
 	.title {
 		margin-left: 5px;

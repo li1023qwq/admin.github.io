@@ -9,9 +9,11 @@
 			</view>
 		</view>
 		<view class="uni-container">
-			<view class="uni-stat--x flex mb-m" style="padding: 0px 15px;">
-				<uni-data-select collection="opendb-app-list" field="appid as value, name as text" orderby="text asc" :defItem="1" label="应用选择" v-model="query.appid" :clear="false" />
-				<uni-data-select collection="opendb-app-versions" :where="versionQuery" class="ml-m" field="_id as value, version as text, uni_platform as label, create_date as date" format="{label} - {text}" orderby="date desc" label="版本选择" v-model="query.version_id" />
+			<view class="uni-stat--x flex mb-m">
+				<uni-data-select collection="opendb-app-list" field="appid as value, name as text" orderby="text asc"
+					:defItem="1" label="应用选择" v-model="query.appid" :clear="false" />
+				<uni-data-select collection="opendb-app-versions" :where="versionQuery" field="_id as value, version as text"
+					orderby="text asc" label="版本选择" v-model="query.version_id" />
 				<view class="flex">
 					<view class="ml-m label-text hide-on-phone">日期选择:</view>
 					<uni-datetime-picker type="date" v-model="query.start_time" returnType="timestamp"
@@ -22,7 +24,7 @@
 			<view class="dispaly-grid">
 				<view v-for="(item,index) in chartsData" :key="index" class="uni-stat--x uni-charts-box1">
 					<view class="label-text" style="margin: 5px 0 20px 0;">{{chartsData[index].title}}</view>
-					<qiun-data-charts type="ring" :chartData="chartsData[index]" echartsH5 echartsApp :errorMessage="errorMessage"/>
+					<qiun-data-charts type="ring" :chartData="chartsData[index]" echartsH5 echartsApp />
 				</view>
 			</view>
 
@@ -54,14 +56,14 @@
 				},
 				platforms: [],
 				dayChartsData: [],
-				monChartsData: [],
-				errorMessage: "",
+				monChartsData: []
 			}
 		},
 		created() {
 			this.debounceGet = debounce(() => {
-				this.getAllData(this.query);
-			}, 300);
+				this.getChartData(this.query)
+				this.getRangeCountData(this.query, 'month')
+			})
 		},
 		watch: {
 			query: {
@@ -86,15 +88,6 @@
 			}
 		},
 		methods: {
-			getAllData(query) {
-				if (!query.appid) {
-					this.errorMessage = "请先选择应用";
-					return; // 如果appid为空，则不进行查询
-				}
-				this.errorMessage = "";
-				this.getChartData(query)
-				this.getRangeCountData(query, 'month')
-			},
 			// 获取天的数据
 			getChartData(query, type = 'day') {
 				query = JSON.parse(JSON.stringify(query))

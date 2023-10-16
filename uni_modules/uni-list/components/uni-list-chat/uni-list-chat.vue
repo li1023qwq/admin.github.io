@@ -7,7 +7,7 @@
 			<view class="uni-list-chat__container">
 				<view class="uni-list-chat__header-warp">
 					<view v-if="avatarCircle || avatarList.length === 0" class="uni-list-chat__header" :class="{ 'header--circle': avatarCircle }">
-						<image class="uni-list-chat__header-image" :class="{ 'header--circle': avatarCircle }" :src="avatarUrl" mode="aspectFill"></image>
+						<image class="uni-list-chat__header-image" :class="{ 'header--circle': avatarCircle }" :src="avatar" mode="aspectFill"></image>
 					</view>
 					<!-- 头像组 -->
 					<view v-else class="uni-list-chat__header">
@@ -18,23 +18,13 @@
 						</view>
 					</view>
 				</view>
-				<!-- #ifndef APP -->
-				<view class="slot-header">
-				<!-- #endif -->
-					<slot name="header"></slot>
-				<!-- #ifndef APP -->
-				</view>
-				<!-- #endif -->
 				<view v-if="badgeText && badgePositon === 'left'" class="uni-list-chat__badge uni-list-chat__badge-pos" :class="[isSingle]">
 					<text class="uni-list-chat__badge-text">{{ badgeText === 'dot' ? '' : badgeText }}</text>
 				</view>
 				<view class="uni-list-chat__content">
 					<view class="uni-list-chat__content-main">
 						<text class="uni-list-chat__content-title uni-ellipsis">{{ title }}</text>
-						<view style="flex-direction: row;">
-							<text class="draft" v-if="isDraft">[草稿]</text>
-							<text class="uni-list-chat__content-note uni-ellipsis">{{isDraft?note.slice(14):note}}</text>
-						</view>
+						<text class="uni-list-chat__content-note uni-ellipsis">{{ note }}</text>
 					</view>
 					<view class="uni-list-chat__content-extra">
 						<slot>
@@ -131,9 +121,6 @@
 		},
 		// inject: ['list'],
 		computed: {
-			isDraft(){
-				return this.note.slice(0,14) == '[uni-im-draft]'
-			},
 			isSingle() {
 				if (this.badgeText === 'dot') {
 					return 'uni-badge--dot';
@@ -159,32 +146,12 @@
 				}
 			}
 		},
-		watch: {
-			avatar:{
-				handler(avatar) {
-					if(avatar.substr(0,8) == 'cloud://'){
-						uniCloud.getTempFileURL({
-							fileList: [avatar]
-						}).then(res=>{
-							// console.log(res);
-							// 兼容uniCloud私有化部署
-							let fileList = res.fileList || res.result.fileList
-							this.avatarUrl = fileList[0].tempFileURL
-						})
-					}else{
-						this.avatarUrl = avatar
-					}
-				},
-				immediate: true
-			}
-		},
 		data() {
 			return {
 				isFirstChild: false,
 				border: true,
 				// avatarList: 3,
-				imageWidth: 50,
-				avatarUrl:''
+				imageWidth: 50
 			};
 		},
 		mounted() {
@@ -231,7 +198,7 @@
 				}
 			},
 			pageApi(api) {
-				let callback = {
+				uni[api]({
 					url: this.to,
 					success: res => {
 						this.$emit('click', {
@@ -242,24 +209,9 @@
 						this.$emit('click', {
 							data: err
 						});
+						console.error(err.errMsg);
 					}
-				}
-				switch (api) {
-					case 'navigateTo':
-						uni.navigateTo(callback)
-						break
-					case 'redirectTo':
-						uni.redirectTo(callback)
-						break
-					case 'reLaunch':
-						uni.reLaunch(callback)
-						break
-					case 'switchTab':
-						uni.switchTab(callback)
-						break
-					default:
-					uni.navigateTo(callback)
-				}
+				});
 			}
 		}
 	};
@@ -493,19 +445,12 @@
 		overflow: hidden;
 	}
 
-	.draft ,.uni-list-chat__content-note {
+	.uni-list-chat__content-note {
 		margin-top: 3px;
 		color: $note-color;
 		font-size: $note-size;
 		font-weight: $title-weight;
 		overflow: hidden;
-	}
-	.draft{
-		color: #eb3a41;
-		/* #ifndef APP-NVUE */
-		flex-shrink: 0;
-		/* #endif */
-		padding-right: 3px;
 	}
 
 	.uni-list-chat__content-extra {

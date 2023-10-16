@@ -1,0 +1,10 @@
+[{
+	"menu_id": "publish-page-admin",
+	"name": "应用发行",
+	"icon": "uni-icons-paperplane",
+	"url": "uni_modules/uni-publish-page-admin/pages/app/list",
+	"sort": 1060,
+	"parent_id": "system_management",
+	"permission": [],
+	"enable": true
+}]

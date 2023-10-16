@@ -19,7 +19,8 @@
 			"plugin": "More admin plugin",
 			"changeLanguage": "Language",
 			"changePwd": "ChangePwd",
-			"signOut": "Sign out"
+			"signOut": "Sign out",
+			"changeShop":"Change Shop"
 		}
 	},
 	"index": {
@@ -54,11 +55,7 @@
 			"batchDelete": "Batch Delete",
 			"exportExcel": "Export Excel",
 			"submit": "Submit",
-			"back": "Back",
-			"tagManager": "Tag Manager",
-			"publish": "Publish page management",
-			"version": "version manager",
-			"sendSMS": "Send SMS"
+			"back": "Back"
 		},
 		"empty": "No more data",
 		"piecePerPage": "piece/page"
@@ -91,8 +88,7 @@
 		},
 		"button": {
 			"addFirstLevelMenu": "Add First-level Menu",
-			"addChildMenu": "Submenu",
-			"updateBuiltInMenu": "Update built-in Menu"
+			"addChildMenu": "Submenu"
 		}
 	},
 	"demo": {

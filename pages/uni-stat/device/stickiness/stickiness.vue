@@ -9,23 +9,24 @@
 			</view>
 		</view>
 		<view class="uni-container">
-			<view class="uni-stat--x flex p-1015">
-				<uni-data-select collection="opendb-app-list" field="appid as value, name as text" orderby="text asc" :defItem="1" label="应用选择" @change="changeAppid" v-model="query.appid" :clear="false" />
-				<uni-data-select collection="opendb-app-versions" :where="versionQuery" class="ml-m" field="_id as value, version as text, uni_platform as label, create_date as date" format="{label} - {text}" orderby="date desc" label="版本选择" v-model="query.version_id" />
-			</view>
 			<view class="uni-stat--x flex">
-				<uni-stat-tabs label="日期选择" :current="currentDateTab" mode="date" @change="changeTimeRange" />
-				<uni-datetime-picker type="datetimerange" :end="new Date().getTime()" v-model="query.start_time"
-					returnType="timestamp" :clearIcon="false" class="uni-stat-datetime-picker"
-					:class="{'uni-stat__actived': currentDateTab < 0 && !!query.start_time.length}"
-					@change="useDatetimePicker" />
+				<uni-data-select collection="opendb-app-list" field="appid as value, name as text" orderby="text asc"
+					:defItem="1" label="应用选择" @change="changeAppid" v-model="query.appid" :clear="false" />
+				<uni-data-select collection="opendb-app-versions" :where="versionQuery"
+					field="_id as value, version as text" orderby="text asc" label="版本选择" v-model="query.version_id" />
+				<view class="flex">
+					<uni-stat-tabs label="日期选择" :current="currentDateTab" mode="date" @change="changeTimeRange" />
+					<uni-datetime-picker type="daterange" :end="new Date().getTime()" v-model="query.start_time"
+						returnType="timestamp" :clearIcon="false" class="uni-stat-datetime-picker"
+						:class="{'uni-stat__actived': currentDateTab < 0 && !!query.start_time.length}"
+						@change="useDatetimePicker" />
+				</view>
 			</view>
 			<view class="uni-stat--x">
 				<uni-stat-tabs label="平台选择" type="boldLine" mode="platform" v-model="query.platform_id"
 					@change="changePlatform" />
-				<uni-data-select ref="version-select" v-if="query.platform_id && query.platform_id.indexOf('==') === -1" collection="uni-stat-app-channels" :where="channelQuery" class="p-channel" field="_id as value, channel_name as text" orderby="text asc" label="渠道/场景值选择" v-model="query.channel_id" />
-				<!-- <uni-data-select v-if="query.platform_id && query.platform_id.indexOf('==') === -1"
-					:localdata="channelData" label="渠道/场景值选择" v-model="query.channel_id"></uni-data-select> -->
+				<uni-data-select v-if="query.platform_id && query.platform_id.indexOf('==') === -1"
+					:localdata="channelData" label="渠道选择" v-model="query.channel_id"></uni-data-select>
 			</view>
 			<view class="uni-stat--x mb-l" style="padding-top: 0;">
 				<view class="mb-m line-bottom">
@@ -34,7 +35,7 @@
 				</view>
 				<view class="p-m">
 					<view class="uni-charts-box">
-						<qiun-data-charts type="pie" :chartData="chartData" echartsH5 echartsApp :errorMessage="errorMessage"/>
+						<qiun-data-charts type="pie" :chartData="chartData" echartsH5 echartsApp />
 					</view>
 				</view>
 			</view>
@@ -105,8 +106,7 @@
 						value: [0, 3, 6, 11, 21, 31, 51, 100]
 					}
 				},
-				channelData: [],
-				errorMessage: "",
+				channelData: []
 			}
 		},
 		computed: {
@@ -136,9 +136,7 @@
 			}
 		},
 		created() {
-			this.debounceGet = debounce(() => {
-				this.getAllData(this.query);
-			}, 300);
+			this.debounceGet = debounce(() => this.getAllData(this.query))
 			this.getChannelData()
 		},
 		watch: {
@@ -209,11 +207,6 @@
 			},
 
 			getAllData(query) {
-				if (!query.appid) {
-					this.errorMessage = "请先选择应用";
-					return; // 如果appid为空，则不进行查询
-				}
-				this.errorMessage = "";
 				this.getChartData(query, this.field, this.fieldName)
 				this.getTabelData(query)
 			},

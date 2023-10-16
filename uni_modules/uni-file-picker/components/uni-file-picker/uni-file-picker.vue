@@ -185,12 +185,6 @@
 				default () {
 					return ['original', 'compressed']
 				}
-			},
-			sourceType: {
-				type: Array,
-				default () {
-					return  ['album', 'camera']
-				}
 			}
 		},
 		data() {
@@ -355,7 +349,6 @@
 						type: this.fileMediatype,
 						compressed: false,
 						sizeType: this.sizeType,
-						sourceType: this.sourceType,
 						// TODO 如果为空，video 有问题
 						extension: _extname.length > 0 ? _extname : undefined,
 						count: this.limitLength - this.files.length, //默认9
@@ -583,11 +576,7 @@
 						path: v.path,
 						size: v.size,
 						fileID:v.fileID,
-						url: v.url,
-						// 修改删除一个文件后不能再上传的bug, #694
-            uuid: v.uuid,
-            status: v.status,
-            cloudPath: v.cloudPath
+						url: v.url
 					})
 				})
 				return newFilesData

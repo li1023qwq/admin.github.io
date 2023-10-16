@@ -2,476 +2,806 @@
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
 			"path": "pages/index/index"
-		},
-		{
-			"path": "uni_modules/uni-id-pages/pages/login/login-withpwd",
+		}, {
+			"path": "pages/login/login",
 			"style": {
 				"topWindow": false,
 				"leftWindow": false,
 				"navigationBarTitleText": "登录"
 			}
-		},
-		{
+		}, {
 			"path": "pages/error/404",
 			"style": {
 				"navigationBarTitleText": "Not Found"
 			}
+		}, {
+			"path": "uni_modules/uni-publish-page-admin/pages/app/list",
+			"style": {
+				"navigationBarTitleText": "发行列表",
+				"enablePullDownRefresh": false
+			}
 		},
 		{
-			"path": "uni_modules/uni-id-pages/pages/userinfo/change_pwd/change_pwd",
+			"path": "uni_modules/uni-publish-page-admin/pages/app/add",
+			"style": {
+				"navigationBarTitleText": "新增发行",
+				"enablePullDownRefresh": false
+			}
+		}, {
+			"path": "pages/tian-redbag/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/tian-redbag/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "pages/tian-redbag/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/changepwd/changepwd",
 			"style": {
 				"navigationBarTitleText": "修改密码"
 			}
-		},
-		{
-			"path": "uni_modules/uni-upgrade-center/pages/version/list",
+
+		}, {
+			"path": "pages/tian-page-components/add",
 			"style": {
-				"navigationBarTitleText": "版本列表"
-			}
-		},
-		{
-			"path": "uni_modules/uni-upgrade-center/pages/version/add",
-			"style": {
-				"navigationBarTitleText": "新版发布"
-			}
-		},
-		{
-			"path": "uni_modules/uni-upgrade-center/pages/version/detail",
-			"style": {
-				"navigationBarTitleText": "版本信息查看"
-			}
-		},
-		{
-			"path": "uni_modules/uni-id-pages/pages/userinfo/deactivate/deactivate",
-			"style": {
-				"navigationBarTitleText": "注销账号"
-			}
-		},
-		{
-			"path": "uni_modules/uni-id-pages/pages/userinfo/userinfo",
-			"style": {
-				"navigationBarTitleText": "个人资料"
-			}
-		},
-		{
-			"path": "uni_modules/uni-id-pages/pages/userinfo/bind-mobile/bind-mobile",
-			"style": {
-				"navigationBarTitleText": "绑定手机号码"
+				"navigationBarTitleText": "新增"
 			}
 		}, {
-			"path": "uni_modules/uni-id-pages/pages/userinfo/cropImage/cropImage",
+			"path": "pages/tian-page-components/edit",
 			"style": {
-				"navigationBarTitleText": ""
+				"navigationBarTitleText": "编辑"
 			}
-		},
-		{
-			"path": "uni_modules/uni-id-pages/pages/login/login-smscode",
+		}, {
+			"path": "pages/tian-page-components/list",
 			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/tian-pages/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/tian-pages/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "pages/tian-pages/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/tian-pages/layout",
+			"style": {
+				"navigationBarTitleText": "排版",
 				"topWindow": false,
 				"leftWindow": false,
-				"navigationBarTitleText": "手机验证码登录"
+				"enablePullDownRefresh": false
 			}
-		},
-		{
-			"path": "uni_modules/uni-id-pages/pages/login/login-withoutpwd",
+
+		}, {
+			"path": "pages/tian-mall-shops/layout",
 			"style": {
-				"topWindow": false,
-				"leftWindow": false,
-				"navigationBarTitleText": "免密登录页"
+				"navigationBarTitleText": "店铺装修",
+				"enablePullDownRefresh": false
 			}
-		},
-		{
-			"path": "uni_modules/uni-id-pages/pages/register/register",
+
+		}, {
+			"path": "pages/opendb-mall-categories/add",
 			"style": {
-				"topWindow": false,
-				"leftWindow": false,
-				"navigationBarTitleText": "注册"
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/opendb-mall-categories/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "pages/opendb-mall-categories/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/opendb-mall-goods/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/opendb-mall-goods/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "pages/opendb-mall-goods/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/opendb-banner/add",
+			"style": {
+				"navigationBarTitleText": "新增"
 			}
 		},
 		{
-			"path": "uni_modules/uni-id-pages/pages/register/register-admin",
+			"path": "pages/opendb-banner/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		},
+		{
+			"path": "pages/opendb-banner/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/opendb-banner-category/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		},
+		{
+			"path": "pages/opendb-banner-category/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		},
+		{
+			"path": "pages/opendb-banner-category/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/uni-id-scores/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/tian-mall-orders/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/tian-mall-orders/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "pages/tian-mall-orders/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/uni-id-task/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/uni-id-task/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "pages/uni-id-task/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/uni-id-task-log/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/uni-id-balances/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/uni-id-balances/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "pages/uni-id-balances/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		},
+		{
+			"path": "pages/tian-user-cashouts/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		},
+		{
+			"path": "pages/uni-id-score-day-statistics/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		},
+		{
+			"path": "pages/uni-id-score-day-statistics/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		},
+		{
+			"path": "pages/uni-id-score-day-statistics/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		},
+		{
+			"path": "pages/tian-mall-shops/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		},
+		{
+			"path": "pages/tian-mall-shops/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		},
+		{
+			"path": "pages/tian-mall-shops/payment",
+			"style": {
+				"navigationBarTitleText": "收款"
+			}
+		},
+		{
+			"path": "pages/tian-mall-shops/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/uni-id-score-day-statistics/bonus",
+			"style": {
+				"navigationBarTitleText": "分红",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/opendb-city-china/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		},
+		{
+			"path": "pages/opendb-city-china/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		},
+		{
+			"path": "pages/opendb-city-china/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/basedata/list",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/basedata/edit",
+			"style": {
+				"navigationBarTitleText": "修改",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/basedata/add",
+			"style": {
+				"navigationBarTitleText": "新增",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/sysconfig/list",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/sysconfig/edit",
+			"style": {
+				"navigationBarTitleText": "修改",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/sysconfig/add",
+			"style": {
+				"navigationBarTitleText": "新增",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/tian-payment-qrcodes/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		},
+		{
+			"path": "pages/tian-payment-qrcodes/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		},
+		{
+			"path": "pages/tian-payment-qrcodes/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		},
+		{
+			"path": "pages/uni-id-channel/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		},
+		{
+			"path": "pages/uni-id-channel/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		},
+		{
+			"path": "pages/uni-id-channel/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/tian-mall-shop-apply/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/tian-mall-shop-apply/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "pages/tian-mall-shop-apply/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/opendb-categories/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/opendb-categories/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "pages/opendb-categories/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/tian-payment-types/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/tian-payment-types/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "pages/tian-payment-types/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/tian-mall-order-refunds/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/tian-mall-order-refunds/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "pages/tian-mall-order-refunds/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/tian-mall-hour-miaosha/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/tian-mall-hour-miaosha/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "pages/tian-mall-hour-miaosha/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/tian-mall-hour-miaosha-goods/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/tian-mall-hour-miaosha-goods/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "pages/tian-mall-hour-miaosha-goods/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}
+	    ,{
+            "path" : "pages/tian-redbag/logs",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "领取日志",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
+	"subPackages": [{
+		"root": "pages/system",
+		"pages": [{
+			"path": "menu/list",
+			"style": {
+				"navigationBarTitleText": "菜单管理"
+			}
+		}, {
+			"path": "menu/add",
+			"style": {
+				"navigationBarTitleText": "新增菜单",
+				"navigationStyle": "default"
+			}
+		}, {
+			"path": "menu/edit",
+			"style": {
+				"navigationBarTitleText": "修改菜单",
+				"navigationStyle": "default"
+			}
+		}, {
+			"path": "permission/list",
+			"style": {
+				"navigationBarTitleText": "权限管理"
+			}
+		}, {
+			"path": "permission/add",
+			"style": {
+				"navigationBarTitleText": "新增权限",
+				"navigationStyle": "default"
+			}
+		}, {
+			"path": "permission/edit",
+			"style": {
+				"navigationBarTitleText": "修改权限",
+				"navigationStyle": "default"
+			}
+		}, {
+			"path": "role/add",
+			"style": {
+				"navigationBarTitleText": "新增角色",
+				"navigationStyle": "default"
+			}
+		}, {
+			"path": "role/edit",
+			"style": {
+				"navigationBarTitleText": "修改角色",
+				"navigationStyle": "default"
+			}
+		}, {
+			"path": "role/list",
+			"style": {
+				"navigationBarTitleText": "角色管理"
+			}
+		}, {
+			"path": "user/add",
+			"style": {
+				"navigationBarTitleText": "新增用户",
+				"navigationStyle": "default"
+			}
+		}, {
+			"path": "user/edit",
+			"style": {
+				"navigationBarTitleText": "修改用户",
+				"navigationStyle": "default"
+			}
+		}, {
+			"path": "user/list",
+			"style": {
+				"navigationBarTitleText": "用户管理"
+			}
+		}]
+	}, {
+		"root": "pages/demo",
+		"pages": [{
+			"path": "init/init",
 			"style": {
 				"topWindow": false,
 				"leftWindow": false,
 				"navigationBarTitleText": "创建超级管理员"
 			}
-		},
-		{
-			"path": "uni_modules/uni-id-pages/pages/register/register-by-email",
+		}, {
+			"path": "icons/icons",
 			"style": {
-				"topWindow": false,
-				"leftWindow": false,
-				"navigationBarTitleText": "邮箱验证码注册"
+				"navigationBarTitleText": "图标"
 			}
-		},
-		{
-			"path": "uni_modules/uni-id-pages/pages/retrieve/retrieve",
+		}, {
+			"path": "table/table",
 			"style": {
-				"topWindow": false,
-				"leftWindow": false,
-				"navigationBarTitleText": "重置密码"
+				"navigationBarTitleText": "表格"
 			}
-		},
-		{
-			"path": "uni_modules/uni-id-pages/pages/retrieve/retrieve-by-email",
+		}]
+	}, {
+		"root": "uni_modules/uni-upgrade-center",
+		"pages": [{
+			"path": "pages/version/list",
 			"style": {
-				"topWindow": false,
-				"leftWindow": false,
-				"navigationBarTitleText": "通过邮箱重置密码"
+				"navigationBarTitleText": "版本列表"
 			}
-		},
-		{
-			"path": "uni_modules/uni-id-pages/pages/common/webview/webview",
+		}, {
+			"path": "pages/version/add",
 			"style": {
-				"topWindow": false,
-				"leftWindow": false,
-				"enablePullDownRefresh": false,
-				"navigationBarTitleText": ""
+				"navigationBarTitleText": "新版发布"
 			}
-		},
-		{
-			"path": "uni_modules/uni-id-pages/pages/userinfo/set-pwd/set-pwd",
+		}, {
+			"path": "pages/version/detail",
 			"style": {
-				"enablePullDownRefresh": false,
-				"navigationBarTitleText": "设置密码"
+				"navigationBarTitleText": "版本信息查看"
 			}
-		}
-	,{
-    "path": "uni_modules/uni-id-pages/pages/userinfo/realname-verify/realname-verify",
-    "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTitleText": "实名认证"
-    }
-}
-],
-	"subPackages": [{
-			"root": "pages/system",
-			"pages": [{
-					"path": "menu/list",
-					"style": {
-						"navigationBarTitleText": "菜单管理"
-					}
-				},
-				{
-					"path": "menu/add",
-					"style": {
-						"navigationBarTitleText": "新增菜单",
-						"navigationStyle": "default"
-					}
-				},
-				{
-					"path": "menu/edit",
-					"style": {
-						"navigationBarTitleText": "修改菜单",
-						"navigationStyle": "default"
-					}
-				},
-				{
-					"path": "permission/list",
-					"style": {
-						"navigationBarTitleText": "权限管理"
-					}
-				},
-				{
-					"path": "permission/add",
-					"style": {
-						"navigationBarTitleText": "新增权限",
-						"navigationStyle": "default"
-					}
-				},
-				{
-					"path": "permission/edit",
-					"style": {
-						"navigationBarTitleText": "修改权限",
-						"navigationStyle": "default"
-					}
-				},
-				{
-					"path": "role/add",
-					"style": {
-						"navigationBarTitleText": "新增角色",
-						"navigationStyle": "default"
-					}
-				},
-				{
-					"path": "role/edit",
-					"style": {
-						"navigationBarTitleText": "修改角色",
-						"navigationStyle": "default"
-					}
-				},
-				{
-					"path": "role/list",
-					"style": {
-						"navigationBarTitleText": "角色管理"
-					}
-				},
-				{
-					"path": "user/add",
-					"style": {
-						"navigationBarTitleText": "新增用户",
-						"navigationStyle": "default"
-					}
-				},
-				{
-					"path": "user/edit",
-					"style": {
-						"navigationBarTitleText": "修改用户",
-						"navigationStyle": "default"
-					}
-				},
-				{
-					"path": "user/list",
-					"style": {
-						"navigationBarTitleText": "用户管理"
-					}
-				},
-				{
-					"path": "app/add",
-					"style": {
-						"navigationBarTitleText": "新增应用",
-						"navigationStyle": "default"
-					}
-				},
-				{
-					"path": "app/list",
-					"style": {
-						"navigationBarTitleText": "应用管理"
-					}
-				},
-				{
-					"path": "app/uni-portal/uni-portal",
-					"style": {
-						"navigationBarTitleText": "发布页管理",
-						"navigationStyle": "default"
-					}
-				},
-				{
-					"path": "tag/add",
-					"style": {
-						"navigationBarTitleText": "新增标签"
-					}
-				},
-				{
-					"path": "tag/edit",
-					"style": {
-						"navigationBarTitleText": "修改标签"
-					}
-				},
-				{
-					"path": "tag/list",
-					"style": {
-						"navigationBarTitleText": "标签管理"
-					}
-				},
-				{
-					"path": "safety/list",
-					"style": {
-						"navigationBarTitleText": "用户日志"
-					}
-				}
-			]
-		},
-		{
-			"root": "pages/demo",
-			"pages": [{
-					"path": "icons/icons",
-					"style": {
-						"navigationBarTitleText": "图标"
-					}
-				},
-				{
-					"path": "table/table",
-					"style": {
-						"navigationBarTitleText": "表格"
-					}
-				}
-			]
-		},
-		{
-			"root": "pages/uni-stat",
-			"pages": [{
-					"path": "page-res/page-res",
-					"style": {
-						"navigationBarTitleText": "受访页",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "page-ent/page-ent",
-					"style": {
-						"navigationBarTitleText": "入口页",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "scene/scene",
-					"style": {
-						"navigationBarTitleText": "场景值（小程序）",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "channel/channel",
-					"style": {
-						"navigationBarTitleText": "渠道（app）",
-						"enablePullDownRefresh": false
-					}
-				},
-				// #ifndef MP
-				{
-					"path": "error/js/js",
-					"style": {
-						"navigationBarTitleText": "js报错统计",
-						"enablePullDownRefresh": false
-					}
-				},
-				// #endif
-				{
-					"path": "error/js/detail",
-					"style": {
-						"navigationBarTitleText": "错误信息",
-						"navigationStyle": "default",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "error/app/app",
-					"style": {
-						"navigationBarTitleText": "app原生报错统计",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "event/event",
-					"style": {
-						"navigationBarTitleText": "事件和转化",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "device/overview/overview",
-					"style": {
-						"navigationBarTitleText": "今日概况",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "device/activity/activity",
-					"style": {
-						"navigationBarTitleText": "活跃度",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "device/trend/trend",
-					"style": {
-						"navigationBarTitleText": "趋势分析",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "device/retention/retention",
-					"style": {
-						"navigationBarTitleText": "留存",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "device/comparison/comparison",
-					"style": {
-						"navigationBarTitleText": "平台对比",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "device/stickiness/stickiness",
-					"style": {
-						"navigationBarTitleText": "粘性",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "user/overview/overview",
-					"style": {
-						"navigationBarTitleText": "今日概况",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "user/activity/activity",
-					"style": {
-						"navigationBarTitleText": "活跃度",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "user/trend/trend",
-					"style": {
-						"navigationBarTitleText": "趋势分析",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "user/retention/retention",
-					"style": {
-						"navigationBarTitleText": "留存",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "user/comparison/comparison",
-					"style": {
-						"navigationBarTitleText": "平台对比",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "user/stickiness/stickiness",
-					"style": {
-						"navigationBarTitleText": "粘性",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "pay-order/overview/overview",
-					"style": {
-						"navigationBarTitleText": "订单概况",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "pay-order/list/list",
-					"style": {
-						"navigationBarTitleText": "订单明细",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "pay-order/funnel/funnel",
-					"style": {
-						"navigationBarTitleText": "漏斗分析",
-						"enablePullDownRefresh": false
-					}
-				},
-				{
-					"path": "pay-order/ranking/ranking",
-					"style": {
-						"navigationBarTitleText": "用户价值排行",
-						"enablePullDownRefresh": false
-					}
-				}
-			]
-		}
-	],
+		}, {
+			"path": "pages/app/list",
+			"style": {
+				"navigationBarTitleText": "应用列表"
+			}
+		}, {
+			"path": "pages/app/detail",
+			"style": {
+				"navigationBarTitleText": "应用信息查看"
+			}
+		}, {
+			"path": "pages/app/add",
+			"style": {
+				"navigationBarTitleText": "新增应用"
+			}
+		}]
+	}, {
+		"root": "uni_modules/tian-article-admin",
+		"pages": [{
+			"path": "pages/opendb-news-articles/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/opendb-news-articles/edit",
+			"style": {
+				"navigationBarTitleText": "修改"
+			}
+		}, {
+			"path": "pages/opendb-news-articles/list",
+			"style": {
+				"navigationBarTitleText": "文章列表"
+			}
+		}, {
+			"path": "pages/opendb-news-categories/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/opendb-news-categories/edit",
+			"style": {
+				"navigationBarTitleText": "修改"
+			}
+		}, {
+			"path": "pages/opendb-news-categories/list",
+			"style": {
+				"navigationBarTitleText": "文章分类列表"
+			}
+		}, {
+			"path": "pages/opendb-news-comments/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/opendb-news-comments/edit",
+			"style": {
+				"navigationBarTitleText": "修改"
+			}
+		}, {
+			"path": "pages/opendb-news-comments/list",
+			"style": {
+				"navigationBarTitleText": "文章评论列表"
+			}
+		}, {
+			"path": "pages/opendb-news-favorite/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/opendb-news-favorite/edit",
+			"style": {
+				"navigationBarTitleText": "修改"
+			}
+		}, {
+			"path": "pages/opendb-news-favorite/list",
+			"style": {
+				"navigationBarTitleText": "文章收藏列表"
+			}
+		}]
+	}, {
+		"root": "pages/uni-stat",
+		"pages": [{
+			"path": "page-res/page-res",
+			"style": {
+				"navigationBarTitleText": "受访页",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "page-ent/page-ent",
+			"style": {
+				"navigationBarTitleText": "入口页",
+				"enablePullDownRefresh": false
+			}
+		}, {
+			"path": "scene/scene",
+			"style": {
+				"navigationBarTitleText": "场景值（小程序）",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "channel/channel",
+			"style": {
+				"navigationBarTitleText": "渠道（app）",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "error/js/js",
+			"style": {
+				"navigationBarTitleText": "js报错统计",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "error/js/detail",
+			"style": {
+				"navigationBarTitleText": "错误信息",
+				"navigationStyle": "default",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "error/app/app",
+			"style": {
+				"navigationBarTitleText": "app原生报错统计",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "event/event",
+			"style": {
+				"navigationBarTitleText": "事件和转化",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "device/overview/overview",
+			"style": {
+				"navigationBarTitleText": "今日概况",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "device/activity/activity",
+			"style": {
+				"navigationBarTitleText": "活跃度",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "device/trend/trend",
+			"style": {
+				"navigationBarTitleText": "趋势分析",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "device/retention/retention",
+			"style": {
+				"navigationBarTitleText": "留存",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "device/comparison/comparison",
+			"style": {
+				"navigationBarTitleText": "平台对比",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "device/stickiness/stickiness",
+			"style": {
+				"navigationBarTitleText": "粘性",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "user/overview/overview",
+			"style": {
+				"navigationBarTitleText": "今日概况",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "user/activity/activity",
+			"style": {
+				"navigationBarTitleText": "活跃度",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "user/trend/trend",
+			"style": {
+				"navigationBarTitleText": "趋势分析",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "user/retention/retention",
+			"style": {
+				"navigationBarTitleText": "留存",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "user/comparison/comparison",
+			"style": {
+				"navigationBarTitleText": "平台对比",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "user/stickiness/stickiness",
+			"style": {
+				"navigationBarTitleText": "粘性",
+				"enablePullDownRefresh": false
+			}
+
+		}]
+	}],
 	"globalStyle": {
+		"navigationStyle": "custom",
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "管理系统",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8",
-		"h5": {
-			"titleNView": false
-		}
+		"backgroundColor": "#F8F8F8"
 	},
 	"topWindow": {
 		"path": "windows/topWindow",
@@ -485,14 +815,7 @@
 	"leftWindow": {
 		"path": "windows/leftWindow",
 		"style": {
-			"width": "240px"
+			"width": "230px"
 		}
-	},
-	"uniIdRouter": {
-		"loginPage": "uni_modules/uni-id-pages/pages/login/login-withpwd",
-		"needLogin": [
-			"^((?!uni-id-pages\/pages\/login|register|retrieve).)*$"
-		],
-		"resToLogin": true
 	}
 }

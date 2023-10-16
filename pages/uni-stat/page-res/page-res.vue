@@ -9,28 +9,30 @@
 			</view>
 		</view>
 		<view class="uni-container">
-			<view class="uni-stat--x flex p-1015">
-				<uni-data-select collection="opendb-app-list" field="appid as value, name as text" orderby="text asc" :defItem="1" label="应用选择" v-model="query.appid" :clear="false" />
-				<uni-data-select collection="opendb-app-versions" :where="versionQuery" class="ml-m" field="_id as value, version as text, uni_platform as label, create_date as date" format="{label} - {text}" orderby="date desc" label="版本选择" v-model="query.version_id" />
-			</view>
 			<view class="uni-stat--x flex">
-				<uni-stat-tabs label="日期选择" :current="currentDateTab" mode="date" @change="changeTimeRange" />
-				<uni-datetime-picker type="datetimerange" :end="new Date().getTime()" v-model="query.start_time"
-					returnType="timestamp" :clearIcon="false" class="uni-stat-datetime-picker"
-					:class="{'uni-stat__actived': currentDateTab < 0 && !!query.start_time.length}"
-					@change="useDatetimePicker" />
+				<uni-data-select collection="opendb-app-list" field="appid as value, name as text" orderby="text asc"
+					:defItem="1" label="应用选择" v-model="query.appid" :clear="false" />
+				<uni-data-select collection="opendb-app-versions" :where="versionQuery"
+					field="_id as value, version as text" orderby="text asc" label="版本选择" v-model="query.version_id" />
+				<view class="flex">
+					<uni-stat-tabs label="日期选择" :current="currentDateTab" mode="date" @change="changeTimeRange" />
+					<uni-datetime-picker type="daterange" :end="new Date().getTime()" v-model="query.start_time"
+						returnType="timestamp" :clearIcon="false" class="uni-stat-datetime-picker"
+						:class="{'uni-stat__actived': currentDateTab < 0 && !!query.start_time.length}"
+						@change="useDatetimePicker" />
+				</view>
 			</view>
 			<view class="uni-stat--x">
-				<uni-stat-tabs label="平台选择" type="boldLine" mode="platform" v-model="query.platform_id" @change="changePlatform" />
-				<uni-data-select ref="version-select" v-if="query.platform_id && query.platform_id.indexOf('==') === -1" collection="uni-stat-app-channels" :where="channelQuery" class="p-channel" field="_id as value, channel_name as text" orderby="text asc" label="渠道/场景值选择" v-model="query.channel_id" />
-				<!-- <uni-data-select v-if="query.platform_id && query.platform_id.indexOf('==') === -1"
-					:localdata="channelData" label="渠道/场景值选择" v-model="query.channel_id"></uni-data-select> -->
+				<uni-stat-tabs label="平台选择" type="boldLine" mode="platform" v-model="query.platform_id"
+					@change="changePlatform" />
+				<uni-data-select v-if="query.platform_id && query.platform_id.indexOf('==') === -1"
+					:localdata="channelData" label="渠道选择" v-model="query.channel_id"></uni-data-select>
 			</view>
 			<uni-stat-panel :items="panelData" />
 			<view class="uni-stat--x p-m">
 				<uni-table :loading="loading" border stripe :emptyText="$t('common.empty')">
 					<uni-tr>
-						<block v-for="(mapper, index) in fieldsMap" :key="index">
+						<template v-for="(mapper, index) in fieldsMap">
 							<uni-th v-if="mapper.title" :key="index" align="center">
 								<!-- #ifdef MP -->
 								{{mapper.title}}
@@ -47,10 +49,10 @@
 								</uni-tooltip>
 								<!-- #endif -->
 							</uni-th>
-						</block>
+						</template>
 					</uni-tr>
 					<uni-tr v-for="(item ,i) in tableData" :key="i">
-						<block v-for="(mapper, index) in fieldsMap" :key="index">
+						<template v-for="(mapper, index) in fieldsMap">
 							<uni-td v-if="index === 1" :key="mapper.field" class="uni-stat-edit--x">
 								{{item[mapper.field] !== undefined ? item[mapper.field] : '-'}}
 								<uni-icons type="compose" color="#2979ff" size="25" class="uni-stat-edit--btn"
@@ -59,7 +61,7 @@
 							<uni-td v-else :key="mapper.field" :align="index === 0 ? 'left' : 'center'">
 								{{item[mapper.field] !== undefined ? item[mapper.field] : '-'}}
 							</uni-td>
-						</block>
+						</template>
 					</uni-tr>
 				</uni-table>
 				<view class="uni-pagination-box">
@@ -275,23 +277,16 @@
 				const db = uniCloud.database()
 				db.collection('uni-stat-pages')
 					.where({
-						path: this.queryId
+						url: this.queryId
 					})
 					.update({
 						title: value
 					})
 					.then((res) => {
-						if (res.result.updated) {
-							uni.showToast({
-								title: '修改成功'
-							})
-							this.getTableData()
-						} else {
-							uni.showToast({
-								title: '修改失败',
-								icon: "none"
-							})
-						}
+						uni.showToast({
+							title: '修改成功'
+						})
+						this.getTableData()
 					}).catch((err) => {
 						uni.showModal({
 							content: err.message || '请求服务失败',

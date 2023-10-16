@@ -2,9 +2,9 @@
 	<view class="uni-forms-item"
 		:class="['is-direction-' + localLabelPos ,border?'uni-forms-item--border':'' ,border && isFirstBorder?'is-first-border':'']">
 		<slot name="label">
-			<view class="uni-forms-item__label" :class="{'no-label':!label && !required}"
+			<view class="uni-forms-item__label" :class="{'no-label':!label && !isRequired}"
 				:style="{width:localLabelWidth,justifyContent: localLabelAlign}">
-				<text v-if="required" class="is-required">*</text>
+				<text v-if="isRequired" class="is-required">*</text>
 				<text>{{label}}</text>
 			</view>
 		</slot>
@@ -126,6 +126,7 @@
 		data() {
 			return {
 				errMsg: '',
+				isRequired: false,
 				userRules: null,
 				localLabelAlign: 'left',
 				localLabelWidth: '65px',
@@ -314,6 +315,7 @@
 				this.localLabelWidth = this._labelWidthUnit(labelWidth)
 				// 标签位置
 				this.localLabelPos = this._labelPosition()
+				this.isRequired = this.required
 				// 将需要校验的子组件加入form 队列
 				this.form && type && childrens.push(this)
 
@@ -349,6 +351,8 @@
 				this.validator = validator
 				// 默认值赋予
 				this.itemSetValue(_getDataValue(this.name, localData))
+				this.isRequired = this._isRequired()
+
 			},
 			unInit() {
 				if (this.form) {

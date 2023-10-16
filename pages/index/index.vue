@@ -1,424 +1,392 @@
 <template>
-	<view class="fix-top-window">
-		<view class="uni-header">
-			<!-- 统计面包屑 -->
-			<uni-stat-breadcrumb class="uni-stat-breadcrumb-on-phone" />
-			<view class="uni-group">
-				<view class="uni-sub-title hide-on-phone"></view>
+	<view class="content" v-if="loaded">
+		<view class="ti-flex">
+			<view class="flex-1 bg-white margin-right-20 padding-22 border-radius">
+				<qiun-title-bar title="数据统计" />
+				<view class="ti-flex font-24">
+					<view class="flex-1 flex-column ti-flex">
+						<text class="padding-bottom-20">销售总额</text>
+						<text class="price number">{{totalSale/100}}</text>
+					</view>
+					<view class="flex-1 flex-column ti-flex">
+						<text class="padding-bottom-20">会员总数</text>
+						<text class="number">{{totalUser}}</text>
+					</view>
+					<view class="flex-1 flex-column ti-flex">
+						<text class="padding-bottom-20">支付笔数</text>
+						<text class="number">{{orderStateMap.total}}</text>
+					</view>
+					<view class="flex-1 flex-column ti-flex">
+						<text class="padding-bottom-20">成交笔数</text>
+						<text class="number">{{orderStateMap.chengjiao}}</text>
+					</view>
+				</view>
+			</view>
+			<view class="flex-1 bg-white padding-22 border-radius">
+				<qiun-title-bar title="代办事项" />
+				<view class="ti-flex font-24">
+					<view class="flex-1 flex-column ti-flex" @click="navTo('/pages/tian-mall-orders/list?state=2')">
+						<text class="padding-bottom-20">待发货订单</text>
+						<text class="number">{{orderStateMap.fahuo}}</text>
+					</view>
+					<view class="flex-1 flex-column ti-flex" @click="navTo('/pages/tian-mall-order-refunds/list')">
+						<text class="padding-bottom-20">退货处理</text>
+						<text class="number">{{goodsReturnCount}}</text>
+					</view>
+					<view class="flex-1 flex-column ti-flex" @click="navTo('/pages/opendb-mall-goods/list?type=remain')">
+						<text class="padding-bottom-20">库存预警</text>
+						<text class="number">{{remainWaring}}</text>
+					</view>
+					<view class="flex-1 flex-column ti-flex">
+						<text class="padding-bottom-20">用户反馈</text>
+						<text class="number">0</text>
+					</view>
+				</view>
 			</view>
 		</view>
-		<view class="uni-container">
-			<!-- 提示条1：初始化db_init.json -->
-			<uni-notice-bar v-if="showdbInit" showGetMore showIcon class="mb-m pointer" text="检测到您未初始化db_init.json，请先右键uniCloud/database/db_init.json文件，执行初始化云数据库，否则左侧无法显示菜单等数据" background-color="#fef0f0" color="#f56c6c" @click="toAddAppId" />
-			<!-- 提示条2：添加应用 -->
-			<uni-notice-bar v-if="showAddAppId" showGetMore showIcon class="mb-m pointer" text="检测到您还未添加应用，点击前往应用管理添加" @click="toAddAppId" />
-			<!-- 提示条3：暂无数据，需开通统计功能 -->
-			<uni-notice-bar v-if="!deviceTableData.length && !userTableData.length && !query.platform_id && complete" showGetMore showIcon class="mb-m pointer"
-				text="暂无数据, 统计相关功能需开通 uni 统计后才能使用, 如未开通, 点击查看具体流程" @click="navTo('https://uniapp.dcloud.io/uni-stat-v2.html')" />
+		<view class="ti-flex margin-top-22" style="align-items: inherit;">
+			<view class="flex-4 margin-right-20 ">
+				<view class="bg-white padding-22 border-radius">
+					<view class="ti-flex">
+						<qiun-title-bar title="订单统计" />
+						<view class="flex-1">
 
-			<view class="uni-stat--x mb-m">
-				<!-- 平台选择标签 -->
-				<uni-stat-tabs label="平台选择" type="boldLine" mode="platform" v-model="query.platform_id" />
+						</view>
+						<view v-for="(item,index) in orderConditions" :key="index" class="subMenu"
+							:class="{current:orderIndex==index}" @click="changeOrderMenu(index)">
+							<text>{{item.title}}</text>
+						</view>
+					</view>
+					<view class="charts-box">
+						<qiun-data-charts class="charts-box" type="column" :chartData="orderData" />
+					</view>
+				</view>
+				<view class="ti-flex margin-top-22" style="align-items: inherit;">
+					<view class="flex-1 bg-white padding-22 border-radius margin-right-20">
+						<qiun-title-bar title="用户排行" />
+						<unicloud-db ref="udb" collection="tian-mall-shops-consumption" orderby="consumption desc"
+							:where="shopCondition" action="user_infos" field="user_id,consumption"
+							v-slot:default="{data,pagination,loading,error,options}" :page-size="10"
+							page-data="replace">
+							<uni-table :loading="loading" :emptyText="error.message || '没有更多数据'">
+								<uni-tr>
+									<uni-th align="">用户</uni-th>
+									<uni-th align="center">消费金额</uni-th>
+								</uni-tr>
+								<uni-tr v-for="(item,index) in data" :key="index">
+									<uni-td align="">
+										<view class="ti-flex">
+											<image :src="item.avatar?item.avatar:'/static/missing-face.png'"
+												mode="aspectFill" class="user-avatar border-radius"></image>
+											<text class="flex-1 margin-left-18"
+												v-if="item.nickname">{{item.nickname}}</text>
+											<text class="flex-1 margin-left-18"
+												v-else-if="item.mobile">{{item.mobile}}</text>
+											<text class="flex-1 margin-left-18" v-else>{{item.id}}</text>
+										</view>
+									</uni-td>
+									<uni-td align="center">
+										<text>{{item.consumption?item.consumption/100:0}}</text>
+									</uni-td>
+								</uni-tr>
+							</uni-table>
+						</unicloud-db>
+					</view>
+					<view class="flex-1 bg-white padding-22 border-radius">
+						<qiun-title-bar title="热搜排行" />
+						<unicloud-db ref="udb" collection="opendb-search-hot" orderby="count desc" field="count,content"
+							v-slot:default="{data,pagination,loading,error,options}" :page-size="10"
+							page-data="replace">
+							<uni-table :loading="loading" :emptyText="error.message || '没有更多数据'">
+								<uni-tr>
+									<uni-th align="">关键词</uni-th>
+									<uni-th align="center">搜索次数</uni-th>
+								</uni-tr>
+								<uni-tr v-for="(item,index) in data" :key="index">
+									<uni-td align="">
+										<view class="padding-6">
+											<text>{{item.content}}</text>
+										</view>
+									</uni-td>
+									<uni-td align="center">
+										<text>{{item.count?item.count:0}}</text>
+									</uni-td>
+								</uni-tr>
+							</uni-table>
+						</unicloud-db>
+					</view>
+				</view>
 			</view>
-			<view class="uni-stat--x p-m">
-				<view class="uni-stat-card-header">设备概览</view>
-				<!-- 设备概览表格 -->
-				<uni-table :loading="loading" border stripe emptyText="暂无数据">
-					<uni-tr>
-						<block v-for="(mapper, index) in deviceTableFields" :key="index">
-							<!-- 表头列 -->
-							<uni-th v-if="mapper.title" :key="index" align="center">
-								{{mapper.title}}
-							</uni-th>
-						</block>
-					</uni-tr>
-					<uni-tr v-for="(item ,i) in deviceTableData" :key="i">
-						<block v-for="(mapper, index) in deviceTableFields" :key="index">
-							<uni-td v-if="mapper.field === 'appid'" align="center">
-								<view v-if="item.appid" @click="navTo('/pages/uni-stat/device/overview/overview', item.appid)" class="link-btn-color">
-									{{item[mapper.field] !== undefined ? item[mapper.field] : '-'}}
-								</view>
-								<view v-else @click="navTo('/pages/system/app/add')" class="link-btn-color">
-									需添加此应用的 appid
-								</view>
-							</uni-td>
-							<uni-td v-else :key="index" align="center">
-								{{item[mapper.field] !== undefined ? item[mapper.field] : '-'}}
-							</uni-td>
-						</block>
-					</uni-tr>
-				</uni-table>
+			<view class="flex-2 ">
+				<view class="bg-white border-radius padding-22">
+					<qiun-title-bar title="热销排行" />
+					<view class="">
+						<unicloud-db ref="udb" collection="opendb-mall-goods" orderby="month_sell_count desc"
+							field="name,goods_thumb,month_sell_count,visite_count" :where="shopCondition"
+							v-slot:default="{data,pagination,loading,error,options}" :page-size="16"
+							page-data="replace">
+							<uni-table :loading="loading" :emptyText="error.message || '没有更多数据'">
+								<uni-tr>
+									<uni-th align="">商品</uni-th>
+									<uni-th align="center">浏览</uni-th>
+									<uni-th align="center">销量</uni-th>
+								</uni-tr>
+								<uni-tr v-for="(item,index) in data" :key="index">
+									<uni-td align="">
+										<view class="ti-flex">
+											<image :src="item.goods_thumb" mode="aspectFill"
+												class="user-avatar border-radius"></image>
+											<text class="flex-1 margin-left-18">{{item.name}}</text>
+										</view>
+									</uni-td>
+									<uni-td align="center"><text>{{item.visite_count?item.visite_count:0}}</text>
+									</uni-td>
+									<uni-td align="center">
+										<text>{{item.month_sell_count?item.month_sell_count:0}}</text>
+									</uni-td>
+								</uni-tr>
+							</uni-table>
+						</unicloud-db>
+					</view>
+				</view>
 			</view>
-			<view class="uni-stat--x p-m">
-				<view class="uni-stat-card-header">注册用户概览</view>
-				<!-- 注册用户概览表格 -->
-				<uni-table :loading="loading" border stripe emptyText="暂无数据">
-					<uni-tr>
-						<block v-for="(mapper, index) in userTableFields" :key="index">
-							<uni-th v-if="mapper.title" :key="index" align="center">
-								{{mapper.title}}
-							</uni-th>
-						</block>
-					</uni-tr>
-					<uni-tr v-for="(item ,i) in userTableData" :key="i">
-						<block v-for="(mapper, index) in userTableFields" :key="index">
-							<uni-td v-if="mapper.field === 'appid'" align="center">
-								<view v-if="item.appid" @click="navTo('/pages/uni-stat/user/overview/overview', item.appid)" class="link-btn-color">
-									{{item[mapper.field] !== undefined ? item[mapper.field] : '-'}}
-								</view>
-								<view v-else @click="navTo('/pages/system/app/add')" class="link-btn-color">
-									需添加此应用的 appid
-								</view>
-							</uni-td>
-							<uni-td v-else :key="index" align="center">
-								{{item[mapper.field] !== undefined ? item[mapper.field] : '-'}}
-							</uni-td>
-						</block>
-					</uni-tr>
-				</uni-table>
-			</view>
+
 		</view>
-
-		<!-- #ifndef H5 -->
-		<fix-window />
-		<!-- #endif -->
 	</view>
 </template>
 
 <script>
-	import {
-		stringifyQuery,
-		stringifyField,
-		stringifyGroupField,
-		getTimeOfSomeDayAgo,
-		division,
-		format,
-		parseDateTime,
-		getFieldTotal,
-		debounce
-	} from '@/js_sdk/uni-stat/util.js'
-
-	import {
-		deviceFeildsMap,
-		userFeildsMap
-	} from './fieldsMap.js'
-
+	//下面是uCharts的配置文件及qiun-data-charts组件的公用中转参数，可以从本配置文件中获取uCharts实例、opts配置、format配置（APP端因采用renderjs无法从此配置文件获取uCharts实例）
+	import uCharts from '@/uni_modules/qiun-data-charts/js_sdk/u-charts/config-ucharts.js';
+	const db = uniCloud.database();
+	const cmd = db.command;
 	export default {
 		data() {
 			return {
-				query: {
-					platform_id: '',
-					start_time: [getTimeOfSomeDayAgo(1), new Date().getTime()]
+				startDate: '2021-03-01',
+				start7Date: "",
+				endDate: "",
+				endDateStr: "",
+				start30DateStr: "",
+				goodsSaleWhere: "",
+				orderConditions: [],
+				orderData: {},
+				orderIndex: 0,
+				loaded: false,
+				totalSale: 0,
+				totalUser: 0,
+				orderStateMap: {
+					total: 0,
+					fahuo: 0,
+					chengjiao: 0
 				},
-				deviceTableData: [],
-				userTableData: [],
-				// panelData: panelOption,
-				// 每页数据量
-				pageSize: 10,
-				// 当前页
-				pageCurrent: 1,
-				// 数据总量
-				total: 0,
-				loading: false,
-				complete: false,
-				statSetting: {
-					mode: "",
-					day: 7
-				},
-				statModeList: [
-					{ "value": "open", "text": "开启" },
-					{ "value": "close", "text": "关闭" },
-					{ "value": "auto", "text": "节能" },
-				],
-				showAddAppId: false,
-				showdbInit: false
-			}
+				remainWaring: 0,
+				goodsReturnCount: 0, //退货
+			};
 		},
-		onReady() {
-			// 创建一个防抖函数，延迟执行getAllData方法
-			this.debounceGet = debounce(() => {
-				this.getAllData(this.queryStr);
-			}, 300);
+		onLoad() {
+			let start30DateStr = this.$formatDate(Date.now() - 3600 * 24 * 30 * 1000, "yyyy-MM-dd");
+			let yestoday = this.$formatDate(Date.now() - 3600 * 24 * 1000, "yyyy-MM-dd hh:mm");
 
-			// 执行防抖函数
-			this.debounceGet();
-
-			// 检查appId
-			this.checkAppId();
-
-			this.checkdbInit();
+			//'state>0 &&create_time >= ' + new Date(start7Date).getTime() + ' && create_time <= ' + Date.now()
+			this.endDate = this.$formatDate(new Date(), "yyyy-MM-dd")
+			this.start7Date = this.$formatDate(Date.now() - 3600 * 24 * 6 * 1000, "yyyy-MM-dd")
+			console.log("this.endDate", this.endDate, this.start7Date)
+			console.log("start30DateStr", start30DateStr)
+			// let endDateStr = this.$util.date("Y-m-d")
+			// this.goodsSaleWhere = `day >= "${this.start7Date}" && day <= "${endDateStr}"`
+			this.orderConditions.push({
+				title: "近一个月",
+				start: start30DateStr,
+				type: "day",
+				where: this.shopCondition + ' && state>0 && create_time >= ' + new Date(start30DateStr)
+					.getTime()
+			})
+			this.orderConditions.push({
+				title: "近一周",
+				start: this.start7Date,
+				type: "day",
+				where: this.shopCondition + ' && state>0 && create_time >= ' + new Date(this.start7Date)
+					.getTime()
+			})
+			this.orderConditions.push({
+				title: "24小时",
+				start: yestoday,
+				where: this.shopCondition + ' && state>0 && create_time >= ' + new Date(yestoday)
+					.getTime()
+			})
+			this.changeOrderMenu(0);
+			this.getStatic();
+			this.loaded = true;
 		},
-
-		watch: {
-			query: {
-				deep: true,
-				handler(newVal) {
-					// 监听query对象的变化，并在变化时执行防抖函数
-					this.debounceGet(this.queryStr);
-				}
-			}
-		},
-
-		computed: {
-			queryStr() {
-				// 默认查询条件
-				const defQuery = `(dimension == "hour" || dimension == "day")`;
-				// 将query对象转换为查询字符串并与默认查询条件合并
-				return stringifyQuery(this.query) + ' && ' + defQuery;
-			},
-
-			deviceTableFields() {
-				// 返回设备表格的字段映射
-				return this.tableFieldsMap(deviceFeildsMap);
-			},
-
-			userTableFields() {
-				// 返回用户表格的字段映射
-				return this.tableFieldsMap(userFeildsMap);
-			}
-		},
-
 		methods: {
-			getAllData(queryStr) {
-				// 获取设备数据
-				this.getApps(this.queryStr, deviceFeildsMap, 'device');
-				// 获取用户数据
-				this.getApps(this.queryStr, userFeildsMap, 'user');
-			},
-
-			tableFieldsMap(fieldsMap) {
-				let tableFields = [];
-				const today = [];
-				const yesterday = [];
-				const other = [];
-
-				for (const mapper of fieldsMap) {
-					if (mapper.field) {
-						if (mapper.hasOwnProperty('value')) {
-							// 如果字段映射中有'value'属性，则根据映射生成今天和昨天的字段
-							const t = JSON.parse(JSON.stringify(mapper));
-							const y = JSON.parse(JSON.stringify(mapper));
-
-							if (mapper.field !== 'total_users' && mapper.field !== 'total_devices') {
-								t.title = '今日' + mapper.title;
-								t.field = mapper.field + '_value';
-								y.title = '昨日' + mapper.title;
-								y.field = mapper.field + '_contrast';
-
-								today.push(t);
-								yesterday.push(y);
-							} else {
-								t.field = mapper.field + '_value';
-								other.push(t);
-							}
-						} else {
-							// 将其他字段直接添加到tableFields中
-							tableFields.push(mapper);
-						}
+			getStatic() {
+				db.collection("tian-mall-shops-consumption").where(this.shopCondition).groupBy("shop_id").groupField(
+					"sum(consumption) as value,count(*) as user").get().then(({
+					result
+				}) => {
+					console.log("shop consumption", result)
+					if (result.data.length > 0) {
+						this.totalSale = result.data[0].value;
+						this.totalUser = result.data[0].user
 					}
-				}
-
-				// 按顺序合并所有的字段
-				tableFields = [...tableFields, ...today, ...yesterday, ...other];
-
-				return tableFields;
-			},
-
-
-			getApps(query, fieldsMap, type = "device") {
-				this.loading = true
-				const db = uniCloud.database()
-				const appDaily = db.collection('uni-stat-result').where(query).getTemp();
-				const appList = db.collection('opendb-app-list').getTemp()
-				db.collection(appDaily, appList)
-					.field(
-						`${stringifyField(fieldsMap, '', 'value')},stat_date,appid,dimension`
-					)
-					.groupBy(`appid,dimension,stat_date`)
-					.groupField(stringifyGroupField(fieldsMap, '', 'value'))
-					.orderBy(`appid`, 'desc')
+				})
+				db.collection('tian-mall-orders')
+					.where(this.shopCondition + ' && state>0')
+					.groupBy('state')
+					.groupField('count(*) as total')
 					.get()
-					.then((res) => {
-						let {
-							data
-						} = res.result
-						//console.log('data: ', data)
-						this[`${type}TableData`] = []
-						if (!data.length) return
-						let appids = [],
-							todays = [],
-							yesterdays = [],
-							isToday = parseDateTime(getTimeOfSomeDayAgo(0), '', ''),
-							isYesterday = parseDateTime(getTimeOfSomeDayAgo(1), '', '')
-						for (const item of data) {
-							const {
-								appid,
-								name
-							} = item.appid && item.appid[0] || {}
-							item.appid = appid
-							item.name = name
+					.then(({
+						result
+					}) => {
+						let stateMap = {
+							total: 0,
+							fahuo: 0,
+							chengjiao: 0
+						};
+						console.log('user statitics2', result.data);
 
-							if (appids.indexOf(item.appid) < 0) {
-								appids.push(item.appid)
+						result.data.map(e => {
+							//总支付单数
+							stateMap.total += e.total * 1;
+							if (e.state == 1) {
+								stateMap.fahuo = e.total
+							} else if (e.state == 3) {
+								//确定收货数量
+								stateMap.chengjiao = e.total
 							}
-							if (item.dimension === 'hour' && item.stat_date === isToday) {
-								todays.push(item)
-							}
-							if (item.dimension === 'day' && item.stat_date === isYesterday) {
-								yesterdays.push(item)
-							}
-						}
-						const keys = fieldsMap.map(f => f.field).filter(Boolean)
-						for (const appid of appids) {
-							const rowData = {}
-							const t = todays.find(item => item.appid === appid)
-							const y = yesterdays.find(item => item.appid === appid)
-							for (const key of keys) {
-								if (key === 'appid' || key === 'name') {
-									rowData[key] = t && t[key]
-								} else {
-									const value = t && t[key]
-									const contrast = y && y[key]
-									rowData[key + '_value'] = format(value)
-									rowData[key + '_contrast'] = format(contrast)
-								}
-							}
-							if (appid) {
-								rowData[`total_${type}s_value`] = "获取中...";
-							}
-							this[`${type}TableData`].push(rowData);
-							if (appid) {
-								// total_users 不准确，置空后由 getFieldTotal 处理, appid 不存在时暂不处理
-								t[`total_${type}s`] = 0
-								const query = JSON.parse(JSON.stringify(this.query))
-								query.start_time = [getTimeOfSomeDayAgo(0), new Date().getTime()]
-								query.appid = appid
-								getFieldTotal.call(this, query, `total_${type}s`).then(total => {
-									this[`${type}TableData`].find(item => item.appid === appid)[
-										`total_${type}s_value`] = total
-								})
-							}
-						}
-					}).catch((err) => {
-						console.error(err)
-						// err.message 错误信息
-						// err.code 错误码
-					}).finally(() => {
-						this.loading = false;
-						this.complete = true;
-					})
-			},
-
-			navTo(url, id) {
-				if (url.indexOf('http') > -1) {
-					// 如果url中包含'http'，则在新窗口中打开该链接
-					window.open(url);
-				} else {
-					if (id) {
-						// 如果有提供id参数，则将其添加到url中作为查询参数
-						url = `${url}?appid=${id}`;
-					}
-					// 使用uni.navigateTo方法进行页面跳转
-					uni.navigateTo({
-						url
+						})
+						this.orderStateMap = stateMap;
 					});
-				}
-			},
-
-			toUrl(url) {
-				// #ifdef H5
-				// 在新窗口中打开url链接（仅适用于H5平台）
-				window.open(url, "_blank");
-				// #endif
-			},
-
-			toAddAppId() {
-				// 隐藏添加App ID的标识
-				this.showAddAppId = false;
-				// 使用uni.navigateTo方法进行页面跳转到指定路径
-				uni.navigateTo({
-					url: "/pages/system/app/list",
-					events: {
-						// 注册事件，用于在目标页面刷新数据后执行回调
-						refreshData: () => {
-							this.checkAppId();
-						}
-					}
+				//库存预警，小于10件的商品
+				db.collection("opendb-mall-goods").where(this.shopCondition + "&& remain_count<10").count().then(({
+					result
+				}) => {
+					this.remainWaring = result.total;
+					console.log("remain_count", result.total)
+				});
+				//退货订单
+				db.collection("tian-mall-order-refunds").where(this.shopCondition + "&& state==0").count().then(({
+					result
+				}) => {
+					this.goodsReturnCount = result.total;
+					console.log("goodsReturnCount", result.total)
 				});
 			},
-
-			async checkAppId() {
-				// 获取uniCloud数据库的实例
-				const db = uniCloud.database();
-				// 查询'opendb-app-list'集合的数据数量
-				let res = await db.collection('opendb-app-list').count();
-				// 如果查询结果为空或total为0，则显示添加App ID的标识
-				this.showAddAppId = (!res.result || res.result.total === 0) ? true : false;
+			changeOrderMenu(index) {
+				this.orderIndex = index;
+				this.getOrderStatistics();
 			},
-
-			async checkdbInit(){
-				// 获取uniCloud数据库的实例
-				const db = uniCloud.database();
-				// 查询'opendb-app-list'集合的数据数量
-				let res = await db.collection('opendb-admin-menus').count();
-				// 如果查询结果为空或total为0，则显示添加App ID的标识
-				this.showdbInit = (!res.result || res.result.total === 0) ? true : false;
-				if (this.showdbInit) {
-					uni.showModal({
-						title: "重要提示",
-						content: `检测到您未初始化db_init.json，请先右键uniCloud/database/db_init.json文件，执行初始化云数据库，否则左侧无法显示菜单等数据`,
-						showCancel: false,
-						confirmText: "我知道了"
-					});
+			async getOrderStatistics() {
+				let order = this.orderConditions[this.orderIndex];
+				console.log("condition", order)
+				this.orderStart = order.start;
+				let tmpcategories = [];
+				let orderCount = []
+				let orderMoney = []
+				//查询订单量和销售额
+				if (order.type == "day") {
+					let {
+						result: totalResult
+					} = await db.collection("tian-mall-orders").where(order.where).field("total_fee,create_time")
+						.groupBy(
+							"dateToString(add(new Date(0),create_time),'%Y-%m-%d','+0800') as text").groupField(
+							"sum(total_fee) as value").get();
+					console.log(totalResult)
+					let moneyMap = totalResult.data.reduce((total, item) => {
+						total[item.text] = item.value;
+						return total;
+					}, {});
+					let idate = new Date(order.start)
+					let edate = new Date(this.endDate)
+					while (idate <= edate) {
+						let key = this.$formatDate(idate, "yyyy-MM-dd");
+						tmpcategories.push(this.$formatDate(idate, "dd"))
+						idate = idate.setDate(idate.getDate() + 1)
+						idate = new Date(idate)
+						orderMoney.push(moneyMap[key] ? moneyMap[key] / 100 : 0)
+					}
+				} else {
+					//小时统计
+					let {
+						result: totalResult
+					} = await db.collection("tian-mall-orders").where(order.where).field("total_fee,create_time")
+						.groupBy(
+							"dateToString(add(new Date(0),create_time),'%Y-%m-%d %H','+0800') as text").groupField(
+							"sum(total_fee) as value").get();
+					console.log(totalResult)
+					let moneyMap = totalResult.data.reduce((total, item) => {
+						total[item.text] = item.value;
+						return total;
+					}, {});
+					console.log(order.start)
+					let idate = new Date(order.start)
+					let edate = new Date()
+					while (idate <= edate) {
+						let key = this.$formatDate(idate, "yyyy-MM-dd hh");
+						tmpcategories.push(this.$formatDate(idate, "hh"))
+						idate = idate.setHours(idate.getHours() + 1)
+						idate = new Date(idate)
+						orderMoney.push(moneyMap[key] ? moneyMap[key] / 100 : 0)
+					}
 				}
+				console.log("orderCount", tmpcategories, orderMoney)
+
+				this.orderData = {
+					categories: tmpcategories,
+					series: [{
+						name: "支付金额",
+						data: orderMoney,
+					}]
+				};
+			},
+			getServerData() {
+
+			},
+			complete(e) {
+				console.log(e);
+				//uCharts.instance[e.id]代表当前的图表实例（除APP端，APP不可在组件外调用uCharts的实例）
+				console.log(uCharts.instance[e.id]);
+
 			}
-
 		}
-
-	}
+	};
 </script>
 
-<style>
-	.uni-stat-card-header {
+<style lang="scss">
+	page {
+		box-shadow: none;
+		background: transparent;
+	}
+
+	.content {
 		display: flex;
-		justify-content: space-between;
-		color: #555;
-		font-size: 14px;
+		flex-direction: column;
+		flex: 1;
+		font-size: 24rpx;
+	}
+
+	.number {
+		color: #1890FF;
+		font-size: 32rpx;
 		font-weight: 600;
-		padding: 10px 0;
-		margin-bottom: 15px;
+	}
+
+	.subMenu {
+		margin-left: 12rpx;
+
+		&.current {
+			color: #1890FF;
+			font-weight: 600;
+		}
+	}
+
+	.charts-box {
+		width: 100%;
+		height: 300px;
 	}
 
 	.uni-table-scroll {
-		min-height: auto;
-	}
-
-	.link-btn-color {
-		color: #007AFF;
-		cursor: pointer;
-	}
-
-	.uni-stat-text {
-		color: #606266;
-	}
-
-	.mt10 {
-		margin-top: 10px;
-	}
-
-	.uni-radio-cell {
-		margin: 0 10px;
-	}
-
-	.uni-stat-tooltip-s {
-		width: 400px;
-		white-space: normal;
-	}
-
-	.uni-a {
-		cursor: pointer;
-		text-decoration: underline;
-		color: #555;
-		font-size: 14px;
+		min-height: 200px;
 	}
 </style>

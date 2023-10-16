@@ -1,0 +1,67 @@
+// 文档教程: https://uniapp.dcloud.net.cn/uniCloud/schema
+{
+	"name": "",
+	"bsonType": "object",
+	"required": [],
+	"permission": {
+		"read": true,
+		"create": false,
+		"update": false,
+		"delete": false
+	},
+	"properties": {
+		"_id": {
+			"description": "ID，系统自动生成"
+		},
+		"name": {
+			"bsonType": "string",
+			"title": "名称"
+		},
+		"type": {
+			"bsonType": "string",
+			"title": "类型",
+			"enum": [{
+				"text": "数量",
+				"value": "amount"
+			}, {
+				"text": "重量",
+				"value": "weight"
+			}]
+		},
+		"configs": {
+			"bsonType": "object",
+			"properties": {
+				"is_default": {
+					"bsonType": "bool"
+				},
+				"first_money": {
+					"bsonType": "int",
+					"title": "首费、分"
+				},
+				"first_amount": {
+					"bsonType": "int",
+					"title": "首重/首件"
+				},
+				"per_amount": {
+					"bsonType": "int",
+					"title": "续重"
+				},
+				"per_money": {
+					"bsonType": "int",
+					"title": "续费、分"
+				},
+				"regions": {
+					"bsonType": "array"
+				}
+			}
+		},
+		"create_date": {
+			"bsonType": "timestamp",
+			"description": "创建时间"
+		},
+		"update_date": {
+			"bsonType": "timestamp",
+			"description": "修改时间"
+		}
+	}
+}

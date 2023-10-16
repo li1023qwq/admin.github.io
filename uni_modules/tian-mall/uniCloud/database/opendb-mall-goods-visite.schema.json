@@ -1,0 +1,37 @@
+// 文档教程: https://uniapp.dcloud.net.cn/uniCloud/schema
+{
+	"bsonType": "object",
+	"required": [],
+	"permission": {
+		"read": "doc.user_id == auth.uid",
+		"create": "doc.user_id == auth.uid",
+		"update": "doc.user_id == auth.uid",
+		"delete": "doc.user_id == auth.uid"
+	},
+	"properties": {
+		"_id": {
+			"description": "ID，系统自动生成"
+		},
+		"goods_id": {
+			"bsonType": "string",
+			"description": "商品 id，参考 opendb-mall-goods 表",
+			"foreignKey": "opendb-mall-goods._id"
+		},
+		"user_id": {
+			"bsonType": "string",
+			"description": "uid，参考 uni-id-users 表",
+			"foreignKey": "uni-id-users._id",
+			"defaultValue": {
+				"$env": "uid"
+			}
+		},
+		"create_date": {
+			"bsonType": "timestamp",
+			"description": "创建时间"
+		},
+		"update_date": {
+			"bsonType": "timestamp",
+			"description": "修改时间"
+		}
+	}
+}

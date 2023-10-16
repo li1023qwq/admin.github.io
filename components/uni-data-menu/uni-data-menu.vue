@@ -1,7 +1,7 @@
 <template>
 	<view>
-		<uni-nav-menu :active="value" activeKey="value" :activeTextColor="activeTextColor" :uniqueOpened="uniqueOpened"
-			@select="onSelect">
+		<uni-nav-menu :active="value" activeKey="value" backgroundColor="transparent" textColor="#b8c7ce"
+			:activeTextColor="activeTextColor" :uniqueOpened="uniqueOpened" @select="onSelect">
 			<uni-menu-sidebar :data="userMenu"></uni-menu-sidebar>
 			<uni-menu-sidebar :data="staticMenu"></uni-menu-sidebar>
 		</uni-nav-menu>
@@ -21,7 +21,7 @@
 				menus: [],
 				userMenu: [],
 				famliy: [],
-
+				preUrl: ""
 			};
 		},
 		mixins: [uniCloud.mixinDatacom],
@@ -34,7 +34,7 @@
 			// 当前激活菜单的文字颜色
 			activeTextColor: {
 				type: String,
-				default: '#42B983'
+				default: '#ffffff'
 			},
 			// 是否只保持一个子菜单的展开
 			uniqueOpened: {
@@ -57,20 +57,13 @@
 				},
 				immediate: true
 			},
-			// TODO 暂时无需监听，需要看后面会出现什么问题
-			// #ifdef H5
 			menus: {
 				immediate: true,
-				handler(newVal,oldVal) {
-					const item = this.menus.find(m => m.value === this.$route.path)
-					// 设置面包屑
-					if(item){
-						this.getMenuAncestor(item.menu_id, newVal)
-						item && this.setRoutes && this.setRoutes(this.famliy)
-					}
+				handler() {
+					const item = this.menus.find(m => m.value === this.$route.path);
+					item && this.preUrl != item.value && this.onSelect(item)
 				}
 			},
-			// #endif
 			$route: {
 				immediate: false,
 				handler(val, old) {
@@ -86,9 +79,7 @@
 		},
 		created() {
 			if (this.hasLocalData(this.localdata)) return
-			// #ifndef H5
 			this.load()
-			// #endif
 		},
 		// computed:{
 		// 	userMenu() {
@@ -104,6 +95,7 @@
 					permission,
 					role
 				} = uniCloud.getCurrentUserInfo()
+				// console.log(1111, uniCloud.getCurrentUserInfo())
 				// 标记叶子节点
 				menuList.map(item => {
 					if (!menuList.some(subMenuItem => subMenuItem.parent_id === item.menu_id)) {
@@ -126,13 +118,10 @@
 				return buildMenus(menuList)
 			},
 			onSelect(menu) {
-
+				this.preUrl = menu.value
 				this.famliy = []
 				this.getMenuAncestor(menu.menu_id, this.menus)
-				this.emit(menu)
-			},
-			emit(menu) {
-				this.$emit('select', menu, this.famliy)
+				this.$emit('select', menu, this.famliy);
 				this.$emit('input', menu.value)
 			},
 			hasLocalData(value) {
@@ -143,6 +132,7 @@
 					return
 				}
 				this.mixinDatacomLoading = true
+
 				this.mixinDatacomGet().then((res) => {
 					this.mixinDatacomLoading = false
 					const {
